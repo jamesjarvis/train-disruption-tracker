@@ -20,13 +20,19 @@
     <key>WorkingDirectory</key>
     <string>__PROJECT_DIR__</string>
 
-    <!-- Run once a day at 06:00. If the Mac is asleep at 06:00, launchd runs the
-         missed job when it next wakes. -->
+    <!-- Run every 2 hours from 06:00 to 20:00. If the Mac is asleep at a fire
+         time, launchd runs the missed job when it next wakes. -->
     <key>StartCalendarInterval</key>
-    <dict>
-        <key>Hour</key><integer>6</integer>
-        <key>Minute</key><integer>0</integer>
-    </dict>
+    <array>
+        <dict><key>Hour</key><integer>6</integer><key>Minute</key><integer>0</integer></dict>
+        <dict><key>Hour</key><integer>8</integer><key>Minute</key><integer>0</integer></dict>
+        <dict><key>Hour</key><integer>10</integer><key>Minute</key><integer>0</integer></dict>
+        <dict><key>Hour</key><integer>12</integer><key>Minute</key><integer>0</integer></dict>
+        <dict><key>Hour</key><integer>14</integer><key>Minute</key><integer>0</integer></dict>
+        <dict><key>Hour</key><integer>16</integer><key>Minute</key><integer>0</integer></dict>
+        <dict><key>Hour</key><integer>18</integer><key>Minute</key><integer>0</integer></dict>
+        <dict><key>Hour</key><integer>20</integer><key>Minute</key><integer>0</integer></dict>
+    </array>
 
     <key>StandardOutPath</key>
     <string>__PROJECT_DIR__/logs/run.log</string>
