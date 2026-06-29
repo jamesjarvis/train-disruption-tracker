@@ -29,18 +29,29 @@ def _escape(text: str) -> str:
 
 
 def _fold(line: str) -> str:
-    """Fold a content line to <=75 octets, continuation lines start with a space."""
-    raw = line.encode("utf-8")
-    if len(raw) <= 75:
+    """Fold a content line to <=75 octets, continuation lines start with a space.
+
+    Folds on character boundaries (never mid multi-byte UTF-8 char), so values
+    containing en-dashes, emoji, etc. survive folding intact.
+    """
+    if len(line.encode("utf-8")) <= 75:
         return line
-    chunks: list[bytes] = []
-    # First line up to 75 octets; subsequent up to 74 (leading space counts).
-    chunks.append(raw[:75])
-    rest = raw[75:]
-    while rest:
-        chunks.append(b" " + rest[:74])
-        rest = rest[74:]
-    return b"\r\n".join(chunks).decode("utf-8")
+    segments: list[str] = []
+    cur = ""
+    cur_bytes = 0
+    for ch in line:
+        ch_bytes = len(ch.encode("utf-8"))
+        # First segment may use 75 octets; continuation segments reserve 1 for the
+        # leading space, so 74 octets of content.
+        limit = 75 if not segments else 74
+        if cur_bytes + ch_bytes > limit:
+            segments.append(cur)
+            cur, cur_bytes = ch, ch_bytes
+        else:
+            cur += ch
+            cur_bytes += ch_bytes
+    segments.append(cur)
+    return segments[0] + "".join(f"\r\n {seg}" for seg in segments[1:])
 
 
 def _event_lines(report: DayReport, dtstamp: str) -> list[str]:

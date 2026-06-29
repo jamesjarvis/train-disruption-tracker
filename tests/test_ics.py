@@ -56,3 +56,23 @@ def test_long_line_is_folded_to_75_octets():
     folded = _fold("X" * 200)
     for ln in folded.split("\r\n"):
         assert len(ln.encode("utf-8")) <= 75
+
+
+def test_folding_never_splits_a_multibyte_char():
+    # En-dashes (3 bytes) packed so a naive octet split would land mid-char.
+    line = "DESCRIPTION:" + "Dartford–Gravesend " * 8
+    folded = _fold(line)
+    # Must still be decodable and round-trip to the original once unfolded.
+    assert folded.encode("utf-8").decode("utf-8") == folded
+    unfolded = folded.replace("\r\n ", "")
+    assert unfolded == line
+    for ln in folded.split("\r\n"):
+        assert len(ln.encode("utf-8")) <= 75
+
+
+def test_real_feed_with_endash_note_is_valid_utf8():
+    rep = DayReport(date(2026, 7, 5), am_total=6, am_disrupted=6, pm_total=10,
+                    pm_disrupted=10,
+                    notes=["Rail replacement bus between Dartford–Gravesend all day"])
+    ics = build_calendar([rep], now=NOW)
+    assert ics.encode("utf-8")  # would raise if a surrogate slipped in

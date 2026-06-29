@@ -1,7 +1,7 @@
 """Static configuration for the disruption tracker.
 
 Everything that might reasonably be tuned lives here so the rest of the code reads
-cleanly. Nothing secret belongs in this file (see secrets/ for OAuth material).
+cleanly.
 """
 
 from __future__ import annotations
