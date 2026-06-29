@@ -27,9 +27,9 @@ PM_END = time(22, 0)
 WINDOW_STEP_MINUTES = 30
 
 # --- Horizon --------------------------------------------------------------
-# "At least one week ahead." 10 days comfortably includes the next two weekends,
-# when engineering works almost always fall.
-HORIZON_DAYS = 10
+# "At least three weeks ahead." 20 days comfortably includes the next three
+# weekends, when engineering works almost always fall.
+HORIZON_DAYS = 20
 
 # --- Scraper politeness ----------------------------------------------------
 OJP_BASE = "https://ojp.nationalrail.co.uk/service/timesandfares"
