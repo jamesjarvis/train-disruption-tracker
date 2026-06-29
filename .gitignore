@@ -1,0 +1,10 @@
+.DS_Store
+.venv/
+__pycache__/
+*.pyc
+secrets/
+logs/
+.pytest_cache/
+*.egg-info/
+# Local launchd job has machine-specific absolute paths; commit only the template.
+com.bexside.disruption.plist

@@ -1,0 +1,21 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//bexside//train-disruption-tracker//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Bexside Trains
+X-WR-TIMEZONE:Europe/London
+REFRESH-INTERVAL;VALUE=DURATION:PT12H
+X-PUBLISHED-TTL:PT12H
+BEGIN:VEVENT
+UID:2026-06-29@bexside-trains
+DTSTAMP:20260629T091614Z
+DTSTART;VALUE=DATE:20260629
+DTEND;VALUE=DATE:20260630
+SUMMARY:🚆 Bexley AM 10% / PM 0% disrupted
+DESCRIPTION:London-bound peak 07:00-10:00: 2/21 trains disrupted (10%).\nBe
+ xley-bound peak 17:00-22:00: 0/26 trains disrupted (0%).\n\n- Disrupted\n\
+ nSource: National Rail journey planner. Auto-generated.
+TRANSP:TRANSPARENT
+END:VEVENT
+END:VCALENDAR
