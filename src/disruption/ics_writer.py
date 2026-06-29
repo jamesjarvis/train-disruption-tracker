@@ -18,8 +18,26 @@ from . import config
 from .models import DayReport
 
 
+_ASCII_MAP = {"–": "-", "—": "-", "‘": "'", "’": "'",
+              "“": '"', "”": '"', "→": "->", "…": "..."}
+
+
+def _ascii(text: str) -> str:
+    """Reduce text to plain ASCII.
+
+    GitHub Pages serves the feed as ``text/calendar`` with no charset, so any
+    non-ASCII byte (e.g. an emoji or en-dash) gets mis-decoded by some clients
+    (Google Calendar shows mojibake). Keeping the feed ASCII-only side-steps that
+    entirely. Common punctuation is transliterated; anything else is dropped.
+    """
+    for src, dst in _ASCII_MAP.items():
+        text = text.replace(src, dst)
+    return text.encode("ascii", "ignore").decode("ascii")
+
+
 def _escape(text: str) -> str:
-    """Escape a TEXT value per RFC 5545 §3.3.11."""
+    """Escape a TEXT value per RFC 5545 §3.3.11 (ASCII-folded first)."""
+    text = _ascii(text)
     return (
         text.replace("\\", "\\\\")
         .replace(";", "\\;")
@@ -54,21 +72,37 @@ def _fold(line: str) -> str:
     return segments[0] + "".join(f"\r\n {seg}" for seg in segments[1:])
 
 
+def _group_by_reason(trains) -> list[tuple[str, list[str]]]:
+    """Group disrupted trains by reason, preserving first-seen order.
+
+    Returns ``[(reason, ["07:28", "07:58", ...]), ...]``; an unset reason falls
+    back to "Disrupted".
+    """
+    groups: dict[str, list[str]] = {}
+    for t in trains:
+        reason = t.reason or "Disrupted"
+        groups.setdefault(reason, []).append(f"{t.departure:%H:%M}")
+    return list(groups.items())
+
+
+def _window_lines(label: str, disrupted: int, total: int, pct: int, trains) -> list[str]:
+    lines = [f"{label} - {disrupted}/{total} disrupted ({pct}%)"]
+    for reason, times in _group_by_reason(trains):
+        lines.append(f"  {reason}: {', '.join(times)}")
+    return lines
+
+
 def _event_lines(report: DayReport, dtstamp: str) -> list[str]:
     d = report.date
-    summary = (
-        f"\U0001f686 Bexley AM {report.am_pct}% / PM {report.pm_pct}% disrupted"
-    )
+    summary = f"Bexley trains AM {report.am_pct}% / PM {report.pm_pct}% disrupted"
     desc_parts = [
-        f"London-bound peak 07:00-10:00: {report.am_disrupted}/{report.am_total} "
-        f"trains disrupted ({report.am_pct}%).",
-        f"Bexley-bound peak 17:00-22:00: {report.pm_disrupted}/{report.pm_total} "
-        f"trains disrupted ({report.pm_pct}%).",
+        *_window_lines("London-bound AM", report.am_disrupted, report.am_total,
+                       report.am_pct, report.am_disrupted_trains),
+        *_window_lines("Bexley-bound PM", report.pm_disrupted, report.pm_total,
+                       report.pm_pct, report.pm_disrupted_trains),
+        "",
+        "Source: National Rail journey planner. Auto-generated.",
     ]
-    if report.notes:
-        desc_parts.append("")
-        desc_parts.extend(f"- {n}" for n in report.notes)
-    desc_parts += ["", "Source: National Rail journey planner. Auto-generated."]
     description = "\n".join(desc_parts)
 
     return [
@@ -80,6 +114,13 @@ def _event_lines(report: DayReport, dtstamp: str) -> list[str]:
         f"SUMMARY:{_escape(summary)}",
         f"DESCRIPTION:{_escape(description)}",
         "TRANSP:TRANSPARENT",
+        # Alert the evening before (20:00): all-day start is midnight, so -PT4H.
+        # Note: Google Calendar ignores VALARMs in subscribed feeds; Apple honours them.
+        "BEGIN:VALARM",
+        "ACTION:DISPLAY",
+        "TRIGGER;RELATED=START:-PT4H",
+        f"DESCRIPTION:{_escape(summary)}",
+        "END:VALARM",
         "END:VEVENT",
     ]
 
@@ -93,6 +134,7 @@ def build_calendar(reports: list[DayReport], *, now: datetime | None = None) -> 
         f"PRODID:{config.ICS_PRODID}",
         "CALSCALE:GREGORIAN",
         "METHOD:PUBLISH",
+        f"NAME:{_escape(config.CALENDAR_NAME)}",  # RFC 7986; some clients prefer this
         f"X-WR-CALNAME:{config.CALENDAR_NAME}",
         f"X-WR-TIMEZONE:{config.CALENDAR_TIME_ZONE}",
         f"REFRESH-INTERVAL;VALUE=DURATION:{config.ICS_REFRESH}",

@@ -22,7 +22,9 @@ def test_ratios_and_affected():
     assert rep.am_total == 4 and rep.am_disrupted == 2 and rep.am_pct == 50
     assert rep.pm_total == 2 and rep.pm_disrupted == 0 and rep.pm_pct == 0
     assert rep.affected is True
-    assert rep.notes == ["Bus service"]  # deduped
+    assert len(rep.am_disrupted_trains) == 2
+    assert [t.reason for t in rep.am_disrupted_trains] == ["Bus service", "Bus service"]
+    assert rep.pm_disrupted_trains == []
 
 
 def test_clean_day_not_affected():
@@ -31,7 +33,7 @@ def test_clean_day_not_affected():
     rep = summarise(D, am, pm)
     assert rep.affected is False
     assert rep.am_pct == 0 and rep.pm_pct == 0
-    assert rep.notes == []
+    assert rep.am_disrupted_trains == [] and rep.pm_disrupted_trains == []
 
 
 def test_empty_window_pct_is_zero_not_error():

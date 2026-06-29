@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from collections.abc import Iterable
 from datetime import date
 
 import httpx
@@ -12,28 +11,22 @@ from .models import DayReport, TrainOption
 from .scraper import fetch_trains
 
 
-def _dedupe_reasons(*groups: Iterable[TrainOption]) -> list[str]:
-    notes: list[str] = []
-    for group in groups:
-        for opt in group:
-            if opt.disrupted and opt.reason and opt.reason not in notes:
-                notes.append(opt.reason)
-    return notes
-
-
 def summarise(
     d: date,
     am_trains: list[TrainOption],
     pm_trains: list[TrainOption],
 ) -> DayReport:
     """Pure summary step (no network) — the unit under test."""
+    am_disrupted = [t for t in am_trains if t.disrupted]
+    pm_disrupted = [t for t in pm_trains if t.disrupted]
     return DayReport(
         date=d,
         am_total=len(am_trains),
-        am_disrupted=sum(1 for t in am_trains if t.disrupted),
+        am_disrupted=len(am_disrupted),
         pm_total=len(pm_trains),
-        pm_disrupted=sum(1 for t in pm_trains if t.disrupted),
-        notes=_dedupe_reasons(am_trains, pm_trains),
+        pm_disrupted=len(pm_disrupted),
+        am_disrupted_trains=am_disrupted,
+        pm_disrupted_trains=pm_disrupted,
     )
 
 

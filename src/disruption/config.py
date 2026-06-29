@@ -43,7 +43,7 @@ REQUEST_RETRIES = 3  # attempts per request before giving up on a window
 RETRY_BACKOFF_SECONDS = 2.0  # linear backoff: attempt N waits N * this
 
 # --- iCalendar output -----------------------------------------------------
-CALENDAR_NAME = "Bexside Trains"
+CALENDAR_NAME = "Bexley Trains Disruptions"
 CALENDAR_TIME_ZONE = "Europe/London"
 ICS_PRODID = "-//bexside//train-disruption-tracker//EN"
 # Used to build stable per-day UIDs so re-publishing updates rather than duplicates.

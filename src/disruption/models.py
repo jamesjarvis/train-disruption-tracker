@@ -27,7 +27,9 @@ class DayReport:
     am_disrupted: int = 0
     pm_total: int = 0
     pm_disrupted: int = 0
-    notes: list[str] = field(default_factory=list)
+    # The actual disrupted trains, so the calendar can list times + reasons.
+    am_disrupted_trains: list[TrainOption] = field(default_factory=list)
+    pm_disrupted_trains: list[TrainOption] = field(default_factory=list)
 
     @property
     def affected(self) -> bool:

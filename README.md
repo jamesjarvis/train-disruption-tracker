@@ -11,8 +11,15 @@ For each of the next ~10 days it measures:
 
 A train counts as **disrupted** if its itinerary uses a rail-replacement bus or is
 cancelled. On any day with non-zero disruption it creates one all-day calendar event,
-e.g. `🚆 Bexley AM 100% / PM 100% disrupted`, with the details in the description.
+e.g. `🚆 Bexley AM 100% / PM 100% disrupted`. The description lists the affected trains
+grouped by reason (e.g. `Rail replacement bus: 07:28, 07:58`) for each peak window.
 Clean days get no event; if a previously-flagged day later clears, its event is deleted.
+
+Each affected event also carries an **alert set for 20:00 the evening before**, as
+advance warning. Caveat: **Google Calendar ignores alarms embedded in subscribed
+feeds**, so the alert only fires for Apple Calendar subscribers (and only if "ignore
+alerts" is left unticked on the subscription). Google subscribers still see the event,
+just no notification.
 
 ## How it works
 
@@ -63,13 +70,17 @@ https://<you>.github.io/<repo>/disruptions.ics
 
 ### 4. Family subscribes
 
-Share this URL (swap `https` for `webcal` so phones auto-add):
+Click to subscribe (phones/desktops hand off to the default calendar app):
+
+**[📅 Subscribe](webcal://jamesjarvis.github.io/train-disruption-tracker/disruptions.ics)**
+
+Raw feed URL (for clients that need `https`, e.g. Google Calendar):
 
 ```
-webcal://<you>.github.io/<repo>/disruptions.ics
+https://jamesjarvis.github.io/train-disruption-tracker/disruptions.ics
 ```
 
-- **Google Calendar:** Other calendars → **From URL** → paste the `https://...ics`.
+- **Google Calendar:** [📅 Add to Google Calendar](https://calendar.google.com/calendar/r?cid=webcal://jamesjarvis.github.io/train-disruption-tracker/disruptions.ics) — or manually: Other calendars → **From URL** → paste the `https://...ics`.
 - **Apple Calendar:** File → **New Calendar Subscription** → paste the `webcal://...`.
 
 Clients re-fetch on their own schedule; events update in place (stable per-day UIDs).
