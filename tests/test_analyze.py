@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from datetime import date, datetime, time
 
-from disruption.analyze import summarise
+from disruption.analyze import merge_trains, summarise
 from disruption.models import TrainOption
 
 D = date(2026, 6, 28)
@@ -39,3 +39,21 @@ def test_clean_day_not_affected():
 def test_empty_window_pct_is_zero_not_error():
     rep = summarise(D, [], [])
     assert rep.am_pct == 0 and rep.pm_pct == 0
+
+
+def test_merge_dedupes_by_departure_keeping_disrupted():
+    # Same 07:28 train: planner says fine, actual says cancelled -> disrupted wins.
+    actual = [_train(7, 28, True, "Cancelled"), _train(7, 58, True, "Delayed 7 min")]
+    planner = [_train(7, 28, False), _train(8, 14, True, "Rail replacement bus")]
+    merged = merge_trains(actual, planner)
+    deps = [t.departure.strftime("%H:%M") for t in merged]
+    assert deps == ["07:28", "07:58", "08:14"]  # union, sorted, no dup 07:28
+    by_time = {t.departure.strftime("%H:%M"): t for t in merged}
+    assert by_time["07:28"].disrupted and by_time["07:28"].reason == "Cancelled"
+
+
+def test_merge_combined_report_counts_all_sources():
+    actual = [_train(7, 28, True, "Cancelled"), _train(7, 58, False)]
+    planner = [_train(7, 58, False), _train(8, 14, True, "Rail replacement bus")]
+    rep = summarise(D, merge_trains(actual, planner), [])
+    assert rep.am_total == 3 and rep.am_disrupted == 2

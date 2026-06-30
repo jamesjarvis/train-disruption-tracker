@@ -92,7 +92,7 @@ def _window_lines(label: str, disrupted: int, total: int, pct: int, trains) -> l
     return lines
 
 
-def _event_lines(report: DayReport, dtstamp: str) -> list[str]:
+def _event_lines(report: DayReport, dtstamp: str, today: date) -> list[str]:
     d = report.date
     summary = f"Bexley trains AM {report.am_pct}% / PM {report.pm_pct}% disrupted"
     desc_parts = [
@@ -101,11 +101,12 @@ def _event_lines(report: DayReport, dtstamp: str) -> list[str]:
         *_window_lines("Bexley-bound PM", report.pm_disrupted, report.pm_total,
                        report.pm_pct, report.pm_disrupted_trains),
         "",
-        "Source: National Rail journey planner. Auto-generated.",
+        "Source: Realtime Trains (actual) + National Rail planner (advance). "
+        "Auto-generated.",
     ]
     description = "\n".join(desc_parts)
 
-    return [
+    lines = [
         "BEGIN:VEVENT",
         f"UID:{d.isoformat()}@{config.ICS_UID_DOMAIN}",
         f"DTSTAMP:{dtstamp}",
@@ -114,20 +115,32 @@ def _event_lines(report: DayReport, dtstamp: str) -> list[str]:
         f"SUMMARY:{_escape(summary)}",
         f"DESCRIPTION:{_escape(description)}",
         "TRANSP:TRANSPARENT",
-        # Alert the evening before (20:00): all-day start is midnight, so -PT4H.
-        # Note: Google Calendar ignores VALARMs in subscribed feeds; Apple honours them.
-        "BEGIN:VALARM",
-        "ACTION:DISPLAY",
-        "TRIGGER;RELATED=START:-PT4H",
-        f"DESCRIPTION:{_escape(summary)}",
-        "END:VALARM",
-        "END:VEVENT",
     ]
+    # Alert the evening before (20:00): all-day start is midnight, so -PT4H. Pointless
+    # for past days, so only future/today events carry it.
+    # Note: Google Calendar ignores VALARMs in subscribed feeds; Apple honours them.
+    if d >= today:
+        lines += [
+            "BEGIN:VALARM",
+            "ACTION:DISPLAY",
+            "TRIGGER;RELATED=START:-PT4H",
+            f"DESCRIPTION:{_escape(summary)}",
+            "END:VALARM",
+        ]
+    lines.append("END:VEVENT")
+    return lines
 
 
-def build_calendar(reports: list[DayReport], *, now: datetime | None = None) -> str:
+def build_calendar(
+    reports: list[DayReport],
+    *,
+    now: datetime | None = None,
+    today: date | None = None,
+) -> str:
     """Return the full .ics document for the affected days in ``reports``."""
-    dtstamp = (now or datetime.now(timezone.utc)).strftime("%Y%m%dT%H%M%SZ")
+    now = now or datetime.now(timezone.utc)
+    today = today or now.date()
+    dtstamp = now.strftime("%Y%m%dT%H%M%SZ")
     lines = [
         "BEGIN:VCALENDAR",
         "VERSION:2.0",
@@ -142,17 +155,21 @@ def build_calendar(reports: list[DayReport], *, now: datetime | None = None) -> 
     ]
     for report in reports:
         if report.affected:
-            lines.extend(_event_lines(report, dtstamp))
+            lines.extend(_event_lines(report, dtstamp, today))
     lines.append("END:VCALENDAR")
     return "\r\n".join(_fold(ln) for ln in lines) + "\r\n"
 
 
 def write_calendar(
-    reports: list[DayReport], path=None, *, now: datetime | None = None
+    reports: list[DayReport],
+    path=None,
+    *,
+    now: datetime | None = None,
+    today: date | None = None,
 ) -> str:
     """Write the feed to ``path`` (default config.OUTPUT_ICS). Returns the text."""
     path = path or config.OUTPUT_ICS
-    text = build_calendar(reports, now=now)
+    text = build_calendar(reports, now=now, today=today)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text, encoding="utf-8")
     return text

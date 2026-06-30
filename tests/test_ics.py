@@ -57,6 +57,21 @@ def test_affected_event_has_valarm_clean_does_not():
     assert "BEGIN:VALARM" not in build_calendar([_clean()], now=NOW)
 
 
+def test_past_day_event_has_no_valarm():
+    d = date(2026, 6, 1)  # before today=2026-06-29
+    past = DayReport(d, am_total=6, am_disrupted=1, pm_total=10, pm_disrupted=0,
+                     am_disrupted_trains=[_train(d, 7, 28, "Cancelled")])
+    ics = build_calendar([past], now=NOW, today=date(2026, 6, 29))
+    assert "BEGIN:VEVENT" in ics  # still recorded as a past disrupted day
+    assert "BEGIN:VALARM" not in ics  # but no pointless past alarm
+
+
+def test_source_line_names_both_feeds():
+    ics = build_calendar([_affected()], now=NOW).replace("\r\n ", "")
+    assert "Realtime Trains (actual)" in ics
+    assert "National Rail planner (advance)" in ics
+
+
 def test_all_day_event_uses_date_values_and_stable_uid():
     ics = build_calendar([_affected()], now=NOW)
     assert "DTSTART;VALUE=DATE:20260705" in ics

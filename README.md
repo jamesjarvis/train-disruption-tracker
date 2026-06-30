@@ -1,19 +1,29 @@
 # Train Disruption Tracker
 
-Scrapes the National Rail journey planner each morning and publishes a **daily
-engineering-disruption ratio** for the Bexley ↔ London commute as an iCalendar feed
-(published to GitHub Pages) your family can subscribe to — no accounts, no OAuth.
+Publishes a **daily disruption ratio** for the Bexley ↔ London commute as an iCalendar
+feed (published to GitHub Pages) your family can subscribe to — no accounts, no OAuth.
+It combines two sources:
 
-For each of the next ~10 days it measures:
+- **Realtime Trains** (actual) for **yesterday, today, tomorrow** — real cancellations
+  and severe delays as they happen.
+- **National Rail journey planner** (advance) for **tomorrow .. ~21 days ahead** —
+  planned engineering works / rail-replacement buses.
+
+For each day it measures:
 
 - **AM peak** — Bexley → London (07:00–10:00), via the London Bridge hub
 - **PM peak** — London → Bexley (17:00–22:00), via the London Bridge hub
 
-A train counts as **disrupted** if its itinerary uses a rail-replacement bus or is
-cancelled. On any day with non-zero disruption it creates one all-day calendar event,
-e.g. `🚆 Bexley AM 100% / PM 100% disrupted`. The description lists the affected trains
-grouped by reason (e.g. `Rail replacement bus: 07:28, 07:58`) for each peak window.
-Clean days get no event; if a previously-flagged day later clears, its event is deleted.
+A train counts as **disrupted** if it is **cancelled**, departs **more than 5 minutes
+late** (actual data), or its planned itinerary uses a **rail-replacement bus**. On any
+day with non-zero disruption it creates one all-day calendar event, e.g. `Bexley trains
+AM 100% / PM 100% disrupted`. The description lists the affected trains grouped by reason
+(e.g. `Cancelled: 07:28, 07:58` / `Delayed 7 min: 08:14`) for each peak window. Clean
+days get no event.
+
+The feed keeps a rolling **~2 months of past days** plus the look-ahead, so it doubles as
+a record of how the line actually ran. Past days carry no alert; future days alert the
+evening before.
 
 Each affected event also carries an **alert set for 20:00 the evening before**, as
 advance warning. Caveat: **Google Calendar ignores alarms embedded in subscribed
@@ -24,17 +34,26 @@ just no notification.
 ## How it works
 
 ```
-main.py → analyze.build_day_report(day)
-            → scraper.fetch_trains(BXY→LBG, AM)  ─┐ count disrupted / total
-            → scraper.fetch_trains(LBG→BXY, PM)  ─┘
-        → calendar_sync.reconcile(reports)  (idempotent create/update/delete)
+main.py → history.load()
+        → analyze.build_actual_report(D-1..D)   via rtt.fetch_trains      (actual)
+        → analyze.build_merged_report(D+1)       rtt + scraper, merged     (both)
+        → analyze.build_day_report(D+2..+21)     via scraper.fetch_trains  (planned)
+        → history.upsert / prune (keep 60 days) / save
+        → ics_writer.write_calendar(reports)     rebuilt from scratch each run
 ```
 
-Data source: `ojp.nationalrail.co.uk/service/timesandfares/...` — server-rendered HTML,
-future-dated, free, no signup. All National-Rail-specific parsing is isolated in
-`src/disruption/scraper.py`; if the site changes, that is the only file to fix. A
-"no parseable trains" guard makes a silent breakage log a warning instead of writing a
-falsely-clean feed.
+Data sources, each isolated in one module so a site/API change only touches that file:
+
+- **`src/disruption/rtt.py`** — Realtime Trains API (`api.rtt.io`): free JSON, HTTP basic
+  auth, gives booked vs realtime departure times and cancellation status. Source of the
+  cancelled / >5-min-late signal.
+- **`src/disruption/scraper.py`** — `ojp.nationalrail.co.uk/service/timesandfares/...`:
+  server-rendered HTML, future-dated, free, no signup. Source of advance engineering /
+  replacement-bus disruption.
+
+Both have a "no parseable trains" guard so a silent breakage logs a warning (and keeps
+the last stored value for that day) instead of writing a falsely-clean feed. History
+lives in a git-ignored `state/history.json`; the published `.ics` is the durable record.
 
 ## Setup
 
@@ -43,17 +62,35 @@ falsely-clean feed.
 ```bash
 python3 -m venv .venv
 ./.venv/bin/python -m pip install -e ".[dev]"
-./.venv/bin/python -m pytest        # 14 tests, no network
+./.venv/bin/python -m pytest        # no network
 ```
 
-### 2. Generate the feed
+### 2. Realtime Trains credentials
+
+Sign up (free, personal use) at <https://api.rtt.io/> and note the issued **username**
+and **password**. Provide them either as environment variables:
+
+```bash
+export RTT_USERNAME=... RTT_PASSWORD=...
+```
+
+…or in a git-ignored `secrets/rtt.json` (preferred for the launchd job):
+
+```json
+{ "username": "...", "password": "..." }
+```
+
+Without credentials the run still works but only emits planner (advance) disruption — no
+actual cancellations/delays.
+
+### 3. Generate the feed
 
 ```bash
 ./.venv/bin/python -m disruption.main           # writes docs/disruptions.ics
 ./.venv/bin/python -m disruption.main --dry-run # print the .ics, write nothing
 ```
 
-### 3. Publish via GitHub Pages (no accounts, no auth)
+### 4. Publish via GitHub Pages (no accounts, no auth)
 
 ```bash
 git init && git add -A && git commit -m "Initial commit"
@@ -68,7 +105,7 @@ The feed is then served at:
 https://<you>.github.io/<repo>/disruptions.ics
 ```
 
-### 4. Family subscribes
+### 5. Family subscribes
 
 Click to subscribe (phones/desktops hand off to the default calendar app):
 
@@ -98,7 +135,7 @@ Clients re-fetch on their own schedule; events update in place (stable per-day U
 `docs/disruptions.ics` so GitHub Pages serves the update. It needs git configured with a
 remote and non-interactive auth (SSH key, or a stored credential helper).
 
-## Scheduling (launchd, daily 06:00)
+## Scheduling (launchd, every 2 hours 06:00–20:00)
 
 The committed `com.bexside.disruption.plist.example` uses a `__PROJECT_DIR__`
 placeholder. Generate the real (git-ignored) plist by substituting this repo's absolute
@@ -113,7 +150,7 @@ launchctl kickstart -k gui/$(id -u)/com.bexside.disruption   # run now to test
 tail -f logs/run.log
 ```
 
-If the Mac is asleep at 06:00, launchd runs the missed job on next wake. To remove:
+If the Mac is asleep at a fire time, launchd runs the missed job on next wake. To remove:
 
 ```bash
 launchctl bootout gui/$(id -u)/com.bexside.disruption
@@ -127,6 +164,12 @@ Stations, peak windows, horizon, calendar name, and politeness delays all live i
 ## Limitations
 
 - Scraping breaks if National Rail changes the planner's HTML — `scraper.py` raises and
-  the day is skipped (logged), so a break is visible rather than silently "clean".
-- "Cancelled with no alternative" trains simply don't appear in the planner; the primary
-  signal is replacement-bus substitution, which does appear.
+  that day's planner refresh is skipped (logged); the last stored value is kept.
+- The planner is future-dated, so it can't see same-day cancellations or delays — that's
+  what the Realtime Trains feed is for, but RTT only covers recent dates. So **tomorrow**
+  shows only pre-cancellations + planned engineering, not predicted delays.
+- `delay_minutes` is the **departure** delay at the origin station, not arrival lateness
+  at the destination.
+- History is machine-local (`state/history.json`); if the job moves to a fresh machine,
+  the rolling 2-month window rebuilds from whatever is already in the published `.ics`
+  plus new runs.

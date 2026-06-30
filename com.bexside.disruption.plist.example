@@ -5,6 +5,10 @@
   Template. Copy to com.bexside.disruption.plist and replace __PROJECT_DIR__ with the
   absolute path to this repo, e.g. /Users/you/development/train-disruption-tracker.
   The README's setup steps do this substitution for you.
+
+  Realtime Trains credentials (actual cancellation/delay data) are read from
+  secrets/rtt.json or the RTT_USERNAME/RTT_PASSWORD env vars; add an
+  <EnvironmentVariables> dict here if you prefer the env-var route.
 -->
 <plist version="1.0">
 <dict>

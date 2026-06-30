@@ -8,11 +8,17 @@ from datetime import date, datetime
 
 @dataclass(frozen=True)
 class TrainOption:
-    """One train option returned by the journey planner for a window."""
+    """One train option, from the journey planner (planned) or Realtime Trains (actual).
+
+    ``disrupted`` is the rollup: a replacement-bus/flagged itinerary (planner), a
+    cancellation, or a departure more than 5 minutes late (Realtime Trains).
+    """
 
     departure: datetime  # scheduled departure from the origin station
-    disrupted: bool  # itinerary has a replacement-bus leg OR is cancelled
-    reason: str | None = None  # short human description, e.g. "Bus service"
+    disrupted: bool  # bus/flag OR cancelled OR delay_minutes > 5
+    reason: str | None = None  # short human description, e.g. "Cancelled", "Delayed 7 min"
+    cancelled: bool = False  # actual cancellation (Realtime Trains)
+    delay_minutes: int | None = None  # departure delay at origin; None if unknown
 
     def __hash__(self) -> int:  # dedupe by departure time across stepped requests
         return hash(self.departure)
