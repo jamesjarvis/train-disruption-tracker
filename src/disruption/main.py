@@ -66,18 +66,20 @@ def collect_reports(horizon_days: int) -> tuple[list[DayReport], date]:
         _log("WARN RTT_USERNAME/RTT_PASSWORD not set — actual data skipped.")
 
     try:
-        # Actual (Realtime Trains): yesterday .. today.
+        # Actual (Realtime Trains): yesterday only. (Today is merged below; the OJP
+        # planner plans forward and won't return a past day reliably.)
         if rtt_client is not None:
-            for offset in range(-config.LIVE_BACK_DAYS, 1):
+            for offset in range(-config.LIVE_BACK_DAYS, 0):
                 d = today + timedelta(days=offset)
                 try:
                     _record(store, build_actual_report(d, client=rtt_client), "actual")
                 except (RttError, httpx.HTTPError) as exc:
                     _log(f"WARN {d} [actual]: {exc} — keeping stored value")
 
-        # Tomorrow: merge actual (pre-cancellations) + planner (engineering works),
-        # falling back to whichever source succeeds.
-        for offset in range(1, config.LIVE_FWD_DAYS + 1):
+        # Today + tomorrow: merge actual (Realtime Trains) + planner, falling back to
+        # whichever source succeeds. Merging today means a dark RTT feed (which silently
+        # serves the plan as "all on time") can't hide disruption the planner still sees.
+        for offset in range(0, config.LIVE_FWD_DAYS + 1):
             d = today + timedelta(days=offset)
             try:
                 if rtt_client is not None:
