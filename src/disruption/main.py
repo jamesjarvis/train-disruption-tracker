@@ -39,15 +39,20 @@ def _record(store: dict[date, DayReport], rep: DayReport, label: str) -> None:
     )
 
 
-def collect_reports(horizon_days: int) -> tuple[list[DayReport], date]:
+def collect_reports(horizon_days: int) -> tuple[list[DayReport], date, list[date]]:
     """Refresh actual + planned days into the history store, prune, and return it.
 
-    Returns (reports_within_window, today). Each day is fetched independently; a source
-    failing for one day skips that refresh (the stored value, if any, is kept) rather
-    than failing the run.
+    Returns (reports_within_window, today, stale_dates). Each day is fetched
+    independently; a source failing for one day skips that refresh (the stored value,
+    if any, is kept) rather than failing the run.
+
+    ``stale_dates`` are live-window days (today/tomorrow) that *every* source failed to
+    refresh this run — so we are serving only an old stored value (or nothing). The feed
+    surfaces these as a warning event so a total data outage can't masquerade as clean.
     """
     today = date.today()
     store = history.load()
+    stale_dates: list[date] = []
 
     planner_client = httpx.Client(
         headers={"User-Agent": config.USER_AGENT},
@@ -97,7 +102,9 @@ def collect_reports(horizon_days: int) -> tuple[list[DayReport], date]:
                 try:
                     _record(store, build_day_report(d, client=planner_client), "planner")
                 except (ScrapeError, httpx.HTTPError) as exc2:
-                    _log(f"WARN {d} [planner]: {exc2} — keeping stored value")
+                    stale_dates.append(d)
+                    _log(f"WARN {d} [planner]: {exc2} — no fresh data; "
+                         "flagging day as stale")
 
         # Advance (planner): the day after the live window .. horizon.
         for offset in range(config.LIVE_FWD_DAYS + 1, horizon_days + 1):
@@ -119,7 +126,7 @@ def collect_reports(horizon_days: int) -> tuple[list[DayReport], date]:
     reports = [
         store[d] for d in sorted(store) if window_start <= d <= window_end
     ]
-    return reports, today
+    return reports, today, stale_dates
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -140,21 +147,30 @@ def main(argv: list[str] | None = None) -> int:
 
     _log(f"Scanning {args.horizon + 1} days ahead + up to "
          f"{config.HISTORY_KEEP_DAYS} days of history")
-    reports, today = collect_reports(args.horizon)
+    reports, today, stale_dates = collect_reports(args.horizon)
 
     affected = [r for r in reports if r.affected]
-    _log(f"Feed covers {len(reports)} days; {len(affected)} affected.")
+    if stale_dates:
+        _log(f"WARN {len(stale_dates)} live-window day(s) had no fresh data: "
+             + ", ".join(d.isoformat() for d in stale_dates))
+    _log(f"Feed covers {len(reports)} days; {len(affected)} affected; "
+         f"{len(stale_dates)} stale.")
 
-    if not reports:
+    if not reports and not stale_dates:
         _log("No days available; leaving existing feed untouched.")
         return 1
 
     if args.dry_run:
-        sys.stdout.write(ics_writer.build_calendar(reports, today=today))
+        sys.stdout.write(
+            ics_writer.build_calendar(reports, today=today, stale_dates=stale_dates)
+        )
         return 0
 
-    ics_writer.write_calendar(reports, args.output, today=today)
-    _log(f"Wrote feed with {len(affected)} event(s) to {args.output}")
+    ics_writer.write_calendar(
+        reports, args.output, today=today, stale_dates=stale_dates
+    )
+    _log(f"Wrote feed with {len(affected)} event(s) + {len(stale_dates)} "
+         f"warning(s) to {args.output}")
     return 0
 
 

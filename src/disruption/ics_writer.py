@@ -131,13 +131,52 @@ def _event_lines(report: DayReport, dtstamp: str, today: date) -> list[str]:
     return lines
 
 
+def _stale_event_lines(d: date, dtstamp: str, today: date) -> list[str]:
+    """A warning event for a live-window day the run could NOT refresh.
+
+    Without this, a total source outage would silently serve the last stored value
+    (often "clean") and the subscriber would never know the data was untrustworthy.
+    """
+    summary = "[!] Bexley trains: data unavailable - check live times"
+    description = (
+        "The automated check could not refresh this day's train data (a data source "
+        "was unavailable). Treat the disruption status as UNVERIFIED and check National "
+        "Rail or your app for live times. This clears automatically on the next good run."
+    )
+    lines = [
+        "BEGIN:VEVENT",
+        f"UID:stale-{d.isoformat()}@{config.ICS_UID_DOMAIN}",
+        f"DTSTAMP:{dtstamp}",
+        f"DTSTART;VALUE=DATE:{d:%Y%m%d}",
+        f"DTEND;VALUE=DATE:{(d + timedelta(days=1)):%Y%m%d}",
+        f"SUMMARY:{_escape(summary)}",
+        f"DESCRIPTION:{_escape(description)}",
+        "TRANSP:TRANSPARENT",
+    ]
+    if d >= today:
+        lines += [
+            "BEGIN:VALARM",
+            "ACTION:DISPLAY",
+            "TRIGGER;RELATED=START:-PT4H",
+            f"DESCRIPTION:{_escape(summary)}",
+            "END:VALARM",
+        ]
+    lines.append("END:VEVENT")
+    return lines
+
+
 def build_calendar(
     reports: list[DayReport],
     *,
     now: datetime | None = None,
     today: date | None = None,
+    stale_dates: list[date] | None = None,
 ) -> str:
-    """Return the full .ics document for the affected days in ``reports``."""
+    """Return the full .ics document for the affected days in ``reports``.
+
+    ``stale_dates`` are live-window days this run could not refresh; each gets a
+    warning event so a silent data outage can't masquerade as a clean day.
+    """
     now = now or datetime.now(timezone.utc)
     today = today or now.date()
     dtstamp = now.strftime("%Y%m%dT%H%M%SZ")
@@ -156,6 +195,8 @@ def build_calendar(
     for report in reports:
         if report.affected:
             lines.extend(_event_lines(report, dtstamp, today))
+    for d in stale_dates or []:
+        lines.extend(_stale_event_lines(d, dtstamp, today))
     lines.append("END:VCALENDAR")
     return "\r\n".join(_fold(ln) for ln in lines) + "\r\n"
 
@@ -166,10 +207,11 @@ def write_calendar(
     *,
     now: datetime | None = None,
     today: date | None = None,
+    stale_dates: list[date] | None = None,
 ) -> str:
     """Write the feed to ``path`` (default config.OUTPUT_ICS). Returns the text."""
     path = path or config.OUTPUT_ICS
-    text = build_calendar(reports, now=now, today=today)
+    text = build_calendar(reports, now=now, today=today, stale_dates=stale_dates)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text, encoding="utf-8")
     return text

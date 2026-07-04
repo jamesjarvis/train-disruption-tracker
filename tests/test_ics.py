@@ -132,3 +132,34 @@ def test_calendar_name_present_as_both_properties():
     ics = build_calendar([_affected()], now=NOW)
     assert "NAME:Bexley Trains Disruptions" in ics
     assert "X-WR-CALNAME:Bexley Trains Disruptions" in ics
+
+
+def test_stale_day_emits_warning_event_even_with_no_reports():
+    d = date(2026, 6, 29)  # == today; a live-window day we could not refresh
+    ics = build_calendar([], now=NOW, stale_dates=[d]).replace("\r\n ", "")
+    assert ics.count("BEGIN:VEVENT") == 1
+    assert "UID:stale-2026-06-29@bexside-trains" in ics
+    assert "DTSTART;VALUE=DATE:20260629" in ics
+    assert "data unavailable" in ics.lower() or "could not" in ics.lower()
+    # It is today/tomorrow, so it must carry the evening-before alarm.
+    assert "BEGIN:VALARM" in ics
+
+
+def test_stale_warning_is_ascii_only():
+    d = date(2026, 6, 29)
+    ics = build_calendar([], now=NOW, stale_dates=[d])
+    ics.encode("ascii")  # raises if a stray emoji/non-ASCII byte slipped in
+
+
+def test_stale_and_affected_same_day_gives_two_distinct_events():
+    d = date(2026, 7, 5)
+    ics = build_calendar([_affected()], now=NOW, stale_dates=[d])
+    assert ics.count("BEGIN:VEVENT") == 2
+    assert "UID:2026-07-05@bexside-trains" in ics
+    assert "UID:stale-2026-07-05@bexside-trains" in ics
+
+
+def test_no_stale_dates_changes_nothing():
+    assert build_calendar([_affected()], now=NOW) == build_calendar(
+        [_affected()], now=NOW, stale_dates=[]
+    )

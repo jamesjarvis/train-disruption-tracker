@@ -63,6 +63,12 @@ that moves the bus markers can't silently hide disruption. History lives in a gi
 > (`tr.changes`, `tr.status`) that carry the bus/disruption markers, so `scraper.py`
 > parses each journey as that whole group — not the summary row alone.
 
+Finally, if a **live-window day (today/tomorrow)** can't be refreshed from *any* source
+this run (a total outage — RTT dark *and* the planner failing), the feed emits an
+explicit **warning event** (`[!] Bexley trains: data unavailable — check live times`)
+for that day instead of silently serving the last stored (often "clean") value. It
+carries the same evening-before alarm and clears automatically on the next good run.
+
 ## Setup
 
 ### 1. Install
