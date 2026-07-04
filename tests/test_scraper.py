@@ -9,7 +9,7 @@ import httpx
 import pytest
 
 from disruption import config
-from disruption.scraper import _get, _parse_page
+from disruption.scraper import ScrapeError, _get, _parse_page, _page_signals_bus
 
 FIXTURES = Path(__file__).parent / "fixtures"
 D = date(2026, 6, 28)
@@ -26,6 +26,39 @@ def test_engineering_day_all_trains_flagged_with_bus():
     assert all(disrupted for _dep, disrupted, _reason in rows)
     assert any("bus" in (reason or "").lower() or reason == "Disrupted"
                for _dep, disrupted, reason in rows)
+
+
+def test_engineering_day_current_markup_all_flagged():
+    """Current (2026) NR markup: bus markers live in the detail rows that FOLLOW
+    each tr.mtx summary row, not inside it. Every journey on this all-bus page must
+    still be flagged as a replacement bus."""
+    rows = _parse_page(_load("eng_bus_am_bxy_lbg_2026.html"), D)
+    assert rows, "expected to parse some trains"
+    assert all(disrupted for _dep, disrupted, _reason in rows), (
+        "every journey on an all-bus day must be flagged disrupted"
+    )
+    assert all("bus" in (reason or "").lower() for _dep, _d, reason in rows)
+
+
+def test_page_signals_bus_detects_current_markup():
+    """The backstop signal: a page whose HTML clearly mentions a replacement bus
+    must be recognised even if no individual row parses as disrupted."""
+    assert _page_signals_bus(_load("eng_bus_am_bxy_lbg_2026.html"))
+    assert _page_signals_bus(_load("eng_am_bxy_lbg_0700.html"))
+    assert not _page_signals_bus(_load("normal_am_bxy_lbg_0700.html"))
+
+
+def test_parse_page_raises_when_bus_signalled_but_nothing_flagged():
+    """Defense in depth: if the page shouts 'replacement bus' but our per-row
+    parsing flags nothing, that is a parser/markup mismatch. Raise rather than
+    silently report a clean day (which is exactly the failure that shipped)."""
+
+    def _blind_row(_row, _d):
+        # Simulate a future markup change that hides the per-row bus marker.
+        return None
+
+    with pytest.raises(ScrapeError):
+        _parse_page(_load("eng_bus_am_bxy_lbg_2026.html"), D, _row_parser=_blind_row)
 
 
 def test_normal_day_no_disruption():

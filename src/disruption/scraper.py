@@ -48,8 +48,51 @@ def _step_times(start: time, end: time, step_minutes: int) -> list[time]:
     return out
 
 
-def _parse_row(row, d: date) -> TrainOptionParse | None:
-    dep_node = row.css_first(".dep")
+# Strong, human-readable signals that a page describes a rail-replacement bus.
+# National Rail moved the per-row bus markers out of the summary row over time, but
+# the page as a whole always carries at least one of these when a bus is involved.
+# Used both to flag a journey and as a page-level backstop (see ``_parse_page``).
+_BUS_SIGNALS = (
+    "sprite-bus",
+    "replacement bus",
+    "made by bus",
+    "rail replacement",
+)
+
+
+def _page_signals_bus(html: str) -> bool:
+    """True if the raw page clearly describes a replacement bus anywhere."""
+    low = html.lower()
+    return any(sig in low for sig in _BUS_SIGNALS)
+
+
+def _journey_groups(tree):
+    """Yield one node list per journey: the ``tr.mtx`` summary row plus the detail
+    rows that follow it (``tr.changes``, ``tr.status``, …) up to the next ``tr.mtx``.
+
+    National Rail renders the bus / disruption markers in those trailing detail rows,
+    not in the summary row, so a journey must be judged from the whole group.
+    """
+    for mtx in tree.css("tr.mtx"):
+        group = [mtx]
+        sib = mtx.next
+        while sib is not None:
+            if sib.tag == "tr":
+                if "mtx" in (sib.attributes.get("class", "") or "").split():
+                    break  # next journey starts here
+                group.append(sib)  # a detail row (changes / status / …)
+            sib = sib.next  # skip whitespace text nodes and anything non-tr
+        yield group
+
+
+def _parse_row(group, d: date) -> TrainOptionParse | None:
+    """Parse one journey group into a (departure, disrupted, reason) tuple.
+
+    ``group`` is the node list from :func:`_journey_groups`: the summary row first,
+    then its detail rows. Disruption is judged across the whole group.
+    """
+    mtx = group[0]
+    dep_node = mtx.css_first(".dep")
     if dep_node is None:
         return None
     dep_text = dep_node.text(strip=True)  # e.g. "07:28"
@@ -59,20 +102,23 @@ def _parse_row(row, d: date) -> TrainOptionParse | None:
         return None
     departure = datetime.combine(d, time(hh, mm))
 
-    row_html = row.html or ""
-    bus = "Platform BUS" in row_html or row.css_first(".sprite-bus") is not None
-    flagged = row.css_first(".journey-status-disrupted") is not None
+    group_html = "".join(n.html or "" for n in group)
+    bus = _page_signals_bus(group_html) or "Platform BUS" in group_html
+    flagged = any(n.css_first(".journey-status-disrupted") is not None for n in group)
     disrupted = bus or flagged
 
     reason: str | None = None
-    if disrupted:
-        desc = row.css_first(".disruptiondesc")
-        if desc is not None and desc.text(strip=True):
-            reason = desc.text(strip=True)
-        elif bus:
-            reason = "Rail replacement bus"
-        else:
-            reason = "Disrupted"
+    if bus:
+        # A clean fixed label reads better in the calendar than the planner's verbose
+        # (and un-spaced) "Bus serviceAll or part of this journey…" run-on text.
+        reason = "Rail replacement bus"
+    elif disrupted:
+        desc = next(
+            (n.css_first(".disruptiondesc") for n in group
+             if n.css_first(".disruptiondesc") is not None),
+            None,
+        )
+        reason = desc.text(strip=True) if desc is not None and desc.text(strip=True) else "Disrupted"
     return (departure, disrupted, reason)
 
 
@@ -80,10 +126,25 @@ def _parse_row(row, d: date) -> TrainOptionParse | None:
 TrainOptionParse = tuple
 
 
-def _parse_page(html: str, d: date) -> list[TrainOptionParse]:
+def _parse_page(html: str, d: date, *, _row_parser=_parse_row) -> list[TrainOptionParse]:
     tree = HTMLParser(html)
-    rows = tree.css("tr.mtx")
-    return [p for p in (_parse_row(r, d) for r in rows) if p is not None]
+    groups = list(_journey_groups(tree))
+    parsed = [p for p in (_row_parser(g, d) for g in groups) if p is not None]
+    # Backstop: if the page has journeys AND clearly describes a replacement bus, yet
+    # none were flagged disrupted, our per-row detection has drifted from the markup.
+    # Refuse to report a (false) clean day — raise so the caller keeps the last stored
+    # value and logs it, instead of silently publishing "clean". This is the exact
+    # failure that shipped: a bus day scored 0% disrupted.
+    if (
+        groups
+        and _page_signals_bus(html)
+        and not any(dis for _dep, dis, _r in parsed)
+    ):
+        raise ScrapeError(
+            f"Page for {d} describes a replacement bus but no journey parsed as "
+            "disrupted; planner markup may have changed."
+        )
+    return parsed
 
 
 def _get(client: httpx.Client, url: str) -> httpx.Response:

@@ -52,8 +52,16 @@ Data sources, each isolated in one module so a site/API change only touches that
   replacement-bus disruption.
 
 Both have a "no parseable trains" guard so a silent breakage logs a warning (and keeps
-the last stored value for that day) instead of writing a falsely-clean feed. History
-lives in a git-ignored `state/history.json`; the published `.ics` is the durable record.
+the last stored value for that day) instead of writing a falsely-clean feed. The scraper
+also carries a **content-vs-parse backstop**: if a planner page clearly describes a
+replacement bus (`sprite-bus` / "replacement bus" / "made by bus") yet no journey parses
+as disrupted, it raises rather than report a false clean day — so a future markup change
+that moves the bus markers can't silently hide disruption. History lives in a git-ignored
+`state/history.json`; the published `.ics` is the durable record.
+
+> The planner renders each journey as a `tr.mtx` summary row followed by detail rows
+> (`tr.changes`, `tr.status`) that carry the bus/disruption markers, so `scraper.py`
+> parses each journey as that whole group — not the summary row alone.
 
 ## Setup
 
