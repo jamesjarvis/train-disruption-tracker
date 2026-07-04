@@ -8,4 +8,40 @@ X-WR-CALNAME:Bexley Trains Disruptions
 X-WR-TIMEZONE:Europe/London
 REFRESH-INTERVAL;VALUE=DURATION:PT12H
 X-PUBLISHED-TTL:PT12H
+BEGIN:VEVENT
+UID:2026-07-04@bexside-trains
+DTSTAMP:20260704T083037Z
+DTSTART;VALUE=DATE:20260704
+DTEND;VALUE=DATE:20260705
+SUMMARY:Bexley trains AM 100% / PM 100% disrupted
+DESCRIPTION:London-bound AM - 6/6 disrupted (100%)\n  Rail replacement bus:
+  07:27\, 07:57\, 08:27\, 08:57\, 09:27\, 09:57\nBexley-bound PM - 10/10 di
+ srupted (100%)\n  Rail replacement bus: 17:25\, 17:55\, 18:25\, 18:55\, 19
+ :25\, 19:55\, 20:25\, 20:55\, 21:25\, 21:55\n\nSource: Realtime Trains (ac
+ tual) + National Rail planner (advance). Auto-generated.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER;RELATED=START:-PT4H
+DESCRIPTION:Bexley trains AM 100% / PM 100% disrupted
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:2026-07-05@bexside-trains
+DTSTAMP:20260704T083037Z
+DTSTART;VALUE=DATE:20260705
+DTEND;VALUE=DATE:20260706
+SUMMARY:Bexley trains AM 100% / PM 100% disrupted
+DESCRIPTION:London-bound AM - 6/6 disrupted (100%)\n  Rail replacement bus:
+  07:11\, 07:41\, 08:11\, 08:41\, 09:11\, 09:41\nBexley-bound PM - 10/10 di
+ srupted (100%)\n  Rail replacement bus: 17:09\, 17:39\, 18:09\, 18:39\, 19
+ :09\, 19:39\, 20:09\, 20:39\, 21:09\, 21:39\n\nSource: Realtime Trains (ac
+ tual) + National Rail planner (advance). Auto-generated.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER;RELATED=START:-PT4H
+DESCRIPTION:Bexley trains AM 100% / PM 100% disrupted
+END:VALARM
+END:VEVENT
 END:VCALENDAR
