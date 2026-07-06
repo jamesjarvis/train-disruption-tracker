@@ -10,7 +10,7 @@ REFRESH-INTERVAL;VALUE=DURATION:PT12H
 X-PUBLISHED-TTL:PT12H
 BEGIN:VEVENT
 UID:2026-07-05@bexside-trains
-DTSTAMP:20260706T150720Z
+DTSTAMP:20260706T170708Z
 DTSTART;VALUE=DATE:20260705
 DTEND;VALUE=DATE:20260706
 SUMMARY:Bexley trains AM 100% / PM 100% disrupted
@@ -23,24 +23,24 @@ TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
 UID:2026-07-06@bexside-trains
-DTSTAMP:20260706T150720Z
+DTSTAMP:20260706T170708Z
 DTSTART;VALUE=DATE:20260706
 DTEND;VALUE=DATE:20260707
-SUMMARY:Bexley trains AM 13% / PM 0% disrupted
+SUMMARY:Bexley trains AM 13% / PM 6% disrupted
 DESCRIPTION:London-bound AM - 3/23 disrupted (13%)\n  Cancelled: 08:28\n  D
- elayed 10 min: 08:57\n  Delayed 8 min: 09:12\nBexley-bound PM - 0/31 disru
- pted (0%)\n\nSource: Realtime Trains (actual) + National Rail planner (adv
- ance). Auto-generated.
+ elayed 10 min: 08:57\n  Delayed 8 min: 09:12\nBexley-bound PM - 2/31 disru
+ pted (6%)\n  Delayed 36 min: 17:07\n  Delayed 9 min: 17:37\n\nSource: Real
+ time Trains (actual) + National Rail planner (advance). Auto-generated.
 TRANSP:TRANSPARENT
 BEGIN:VALARM
 ACTION:DISPLAY
 TRIGGER;RELATED=START:-PT4H
-DESCRIPTION:Bexley trains AM 13% / PM 0% disrupted
+DESCRIPTION:Bexley trains AM 13% / PM 6% disrupted
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2026-07-26@bexside-trains
-DTSTAMP:20260706T150720Z
+DTSTAMP:20260706T170708Z
 DTSTART;VALUE=DATE:20260726
 DTEND;VALUE=DATE:20260727
 SUMMARY:Bexley trains AM 100% / PM 100% disrupted
