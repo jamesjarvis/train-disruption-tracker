@@ -61,6 +61,27 @@ def test_parse_page_raises_when_bus_signalled_but_nothing_flagged():
         _parse_page(_load("eng_bus_am_bxy_lbg_2026.html"), D, _row_parser=_blind_row)
 
 
+def test_cancelled_journey_flagged_with_clean_reason():
+    """A cancelled planner journey must be flagged, and its reason must be the clean
+    short label ("Cancelled") — not the run-on desc text with the 'Find alternative
+    trains' call-to-action and embedded newlines that leaked into the feed."""
+    rows = _parse_page(_load("cancelled_planner_journey.html"), D)
+    cancelled = [(dep, reason) for dep, dis, reason in rows if dis]
+    assert len(cancelled) == 1, "the 08:28 cancellation must be detected"
+    dep, reason = cancelled[0]
+    assert dep.strftime("%H:%M") == "08:28"
+    assert reason == "Cancelled"
+    # No raw-desc pollution.
+    assert "find alternative" not in reason.lower()
+    assert "\n" not in reason and "\t" not in reason
+
+
+def test_second_clean_journey_not_flagged():
+    rows = _parse_page(_load("cancelled_planner_journey.html"), D)
+    clean = [dep for dep, dis, _r in rows if not dis]
+    assert [d.strftime("%H:%M") for d in clean] == ["08:58"]
+
+
 def test_normal_day_no_disruption():
     rows = _parse_page(_load("normal_am_bxy_lbg_0700.html"), D)
     assert rows, "expected to parse some trains"

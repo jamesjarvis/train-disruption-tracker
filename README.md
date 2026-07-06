@@ -61,7 +61,11 @@ that moves the bus markers can't silently hide disruption. History lives in a gi
 
 > The planner renders each journey as a `tr.mtx` summary row followed by detail rows
 > (`tr.changes`, `tr.status`) that carry the bus/disruption markers, so `scraper.py`
-> parses each journey as that whole group — not the summary row alone.
+> parses each journey as that whole group — not the summary row alone. A journey counts
+> as disrupted when the group contains a `.disruptiondesc` block (the planner only emits
+> one when something is wrong — bus, cancellation, or amendment), and the reason is that
+> block's short `<h4 class="title">` label (e.g. "Cancelled"), not its verbose run-on
+> body text.
 
 Finally, if a **live-window day (today/tomorrow)** can't be refreshed from *any* source
 this run (a total outage — RTT dark *and* the planner failing), the feed emits an

@@ -103,23 +103,41 @@ def _parse_row(group, d: date) -> TrainOptionParse | None:
     departure = datetime.combine(d, time(hh, mm))
 
     group_html = "".join(n.html or "" for n in group)
+    desc = next(
+        (n.css_first(".disruptiondesc") for n in group
+         if n.css_first(".disruptiondesc") is not None),
+        None,
+    )
     bus = _page_signals_bus(group_html) or "Platform BUS" in group_html
     flagged = any(n.css_first(".journey-status-disrupted") is not None for n in group)
-    disrupted = bus or flagged
+    # The planner only renders a .disruptiondesc block when the journey is disrupted, so
+    # its mere presence is a robust signal — and it covers cancellations / amendments,
+    # not just buses, without relying on the (largely retired) journey-status-disrupted
+    # class alone.
+    disrupted = bus or flagged or desc is not None
 
     reason: str | None = None
-    if bus:
-        # A clean fixed label reads better in the calendar than the planner's verbose
-        # (and un-spaced) "Bus serviceAll or part of this journey…" run-on text.
-        reason = "Rail replacement bus"
-    elif disrupted:
-        desc = next(
-            (n.css_first(".disruptiondesc") for n in group
-             if n.css_first(".disruptiondesc") is not None),
-            None,
-        )
-        reason = desc.text(strip=True) if desc is not None and desc.text(strip=True) else "Disrupted"
+    if disrupted:
+        reason = "Rail replacement bus" if bus else _reason_from_desc(desc)
     return (departure, disrupted, reason)
+
+
+def _reason_from_desc(desc) -> str:
+    """A short, clean reason from a .disruptiondesc block.
+
+    The planner formats it as an ``<h4 class="title">`` short label ("Cancelled",
+    "Bus service", …) followed by a verbose paragraph and a "Find alternative trains"
+    call-to-action. Dumping the whole node's text runs those together with no spacing
+    and drags in the boilerplate, so prefer the title; fall back to a whitespace-
+    collapsed, truncated summary.
+    """
+    if desc is None:
+        return "Disrupted"
+    title = desc.css_first(".title")
+    if title is not None and title.text(strip=True):
+        return " ".join(title.text(strip=True).split())
+    text = desc.text(strip=True)
+    return " ".join(text.split())[:80] if text else "Disrupted"
 
 
 # A parsed row is a (departure, disrupted, reason) tuple before window filtering.

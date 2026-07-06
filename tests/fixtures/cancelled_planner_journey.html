@@ -1,0 +1,35 @@
+<!-- Trimmed National Rail planner results table for a day with one cancelled
+     journey. Mirrors the live 2026 markup: the disruption lives in the detail rows
+     that follow the tr.mtx summary row, and .disruptiondesc holds an <h4 class="title">
+     short label ("Cancelled") plus a verbose paragraph and a "Find alternative trains"
+     call-to-action. The whole-desc text run-on is exactly what leaked into the feed. -->
+<html><body>
+<table class="jp-results">
+<tbody>
+  <tr class="mtx">
+    <td class="dep">08:28</td>
+    <td class="arr">08:59</td>
+    <td class="journey-status-disrupted">Disrupted</td>
+  </tr>
+  <tr class="changes"><td>Changes at London Bridge</td></tr>
+  <tr class="status">
+    <td>
+      <div class="disruptiondesc">
+        <h4 class="title">Cancelled</h4>
+        <p>This train is cancelled. Please click 'Find Alternative Trains'
+           for current alternative services to help you complete your
+           journey.</p>
+        <a class="find-alternative" href="/alt">Find alternative trains</a>
+      </div>
+    </td>
+  </tr>
+  <tr class="faredets"><td>fares</td></tr>
+
+  <tr class="alt mtx">
+    <td class="dep">08:58</td>
+    <td class="arr">09:29</td>
+  </tr>
+  <tr class="faredets"><td>fares</td></tr>
+</tbody>
+</table>
+</body></html>
