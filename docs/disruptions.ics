@@ -10,7 +10,7 @@ REFRESH-INTERVAL;VALUE=DURATION:PT12H
 X-PUBLISHED-TTL:PT12H
 BEGIN:VEVENT
 UID:2026-07-05@bexside-trains
-DTSTAMP:20260706T062248Z
+DTSTAMP:20260706T072306Z
 DTSTART;VALUE=DATE:20260705
 DTEND;VALUE=DATE:20260706
 SUMMARY:Bexley trains AM 100% / PM 100% disrupted
@@ -22,8 +22,26 @@ DESCRIPTION:London-bound AM - 6/6 disrupted (100%)\n  Rail replacement bus:
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
+UID:2026-07-06@bexside-trains
+DTSTAMP:20260706T072306Z
+DTSTART;VALUE=DATE:20260706
+DTEND;VALUE=DATE:20260707
+SUMMARY:Bexley trains AM 4% / PM 0% disrupted
+DESCRIPTION:London-bound AM - 1/23 disrupted (4%)\n  CancelledThis train is
+  cancelled. Please click 'Find\n									Alternative Trains' for current a
+ lternative services to\n									help you complete your journey.Find alter
+ native trains: 08:28\nBexley-bound PM - 0/31 disrupted (0%)\n\nSource: Rea
+ ltime Trains (actual) + National Rail planner (advance). Auto-generated.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER;RELATED=START:-PT4H
+DESCRIPTION:Bexley trains AM 4% / PM 0% disrupted
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
 UID:2026-07-26@bexside-trains
-DTSTAMP:20260706T062248Z
+DTSTAMP:20260706T072306Z
 DTSTART;VALUE=DATE:20260726
 DTEND;VALUE=DATE:20260727
 SUMMARY:Bexley trains AM 100% / PM 100% disrupted
