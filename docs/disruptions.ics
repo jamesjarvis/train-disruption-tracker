@@ -10,7 +10,7 @@ REFRESH-INTERVAL;VALUE=DURATION:PT12H
 X-PUBLISHED-TTL:PT12H
 BEGIN:VEVENT
 UID:2026-07-06@bexside-trains
-DTSTAMP:20260707T070735Z
+DTSTAMP:20260707T105054Z
 DTSTART;VALUE=DATE:20260706
 DTEND;VALUE=DATE:20260707
 SUMMARY:Bexley trains AM 9% / PM 26% disrupted
@@ -24,7 +24,7 @@ TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
 UID:2026-07-07@bexside-trains
-DTSTAMP:20260707T070735Z
+DTSTAMP:20260707T105054Z
 DTSTART;VALUE=DATE:20260707
 DTEND;VALUE=DATE:20260708
 SUMMARY:Bexley trains AM 4% / PM 0% disrupted
@@ -40,7 +40,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2026-07-26@bexside-trains
-DTSTAMP:20260707T070735Z
+DTSTAMP:20260707T105054Z
 DTSTART;VALUE=DATE:20260726
 DTEND;VALUE=DATE:20260727
 SUMMARY:Bexley trains AM 100% / PM 100% disrupted
@@ -54,6 +54,40 @@ BEGIN:VALARM
 ACTION:DISPLAY
 TRIGGER;RELATED=START:-PT4H
 DESCRIPTION:Bexley trains AM 100% / PM 100% disrupted
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:stale-2026-07-07@bexside-trains
+DTSTAMP:20260707T105054Z
+DTSTART;VALUE=DATE:20260707
+DTEND;VALUE=DATE:20260708
+SUMMARY:[!] Bexley trains: data unavailable - check live times
+DESCRIPTION:The automated check could not refresh this day's train data (a 
+ data source was unavailable). Treat the disruption status as UNVERIFIED an
+ d check National Rail or your app for live times. This clears automaticall
+ y on the next good run.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER;RELATED=START:-PT4H
+DESCRIPTION:[!] Bexley trains: data unavailable - check live times
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:stale-2026-07-08@bexside-trains
+DTSTAMP:20260707T105054Z
+DTSTART;VALUE=DATE:20260708
+DTEND;VALUE=DATE:20260709
+SUMMARY:[!] Bexley trains: data unavailable - check live times
+DESCRIPTION:The automated check could not refresh this day's train data (a 
+ data source was unavailable). Treat the disruption status as UNVERIFIED an
+ d check National Rail or your app for live times. This clears automaticall
+ y on the next good run.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER;RELATED=START:-PT4H
+DESCRIPTION:[!] Bexley trains: data unavailable - check live times
 END:VALARM
 END:VEVENT
 END:VCALENDAR
