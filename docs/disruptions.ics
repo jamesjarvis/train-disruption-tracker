@@ -10,7 +10,7 @@ REFRESH-INTERVAL;VALUE=DURATION:PT12H
 X-PUBLISHED-TTL:PT12H
 BEGIN:VEVENT
 UID:2026-07-06@bexside-trains
-DTSTAMP:20260709T150139Z
+DTSTAMP:20260709T170742Z
 DTSTART;VALUE=DATE:20260706
 DTEND;VALUE=DATE:20260707
 SUMMARY:Bexley trains AM 6% / PM 26% disrupted
@@ -24,7 +24,7 @@ TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
 UID:2026-07-07@bexside-trains
-DTSTAMP:20260709T150139Z
+DTSTAMP:20260709T170742Z
 DTSTART;VALUE=DATE:20260707
 DTEND;VALUE=DATE:20260708
 SUMMARY:Bexley trains AM 6% / PM 0% disrupted
@@ -36,19 +36,37 @@ TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
 UID:2026-07-08@bexside-trains
-DTSTAMP:20260709T150139Z
+DTSTAMP:20260709T170742Z
 DTSTART;VALUE=DATE:20260708
 DTEND;VALUE=DATE:20260709
 SUMMARY:Bexley trains AM 3% / PM 10% disrupted
-DESCRIPTION:London-bound AM - 1/30 disrupted (3%)\n  problem with train: 07
+DESCRIPTION:London-bound AM - 1/35 disrupted (3%)\n  problem with train: 07
  :13\nBexley-bound PM - 3/31 disrupted (10%)\n  Delayed 7 min: 17:45\n  Del
  ayed 6 min: 18:15\n  problem with train: 18:39\n\nSource: Realtime Trains 
  (actual) + National Rail planner (advance). Auto-generated.
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
+UID:2026-07-09@bexside-trains
+DTSTAMP:20260709T170742Z
+DTSTART;VALUE=DATE:20260709
+DTEND;VALUE=DATE:20260710
+SUMMARY:Bexley trains AM 0% / PM 42% disrupted
+DESCRIPTION:London-bound AM - 0/23 disrupted (0%)\nBexley-bound PM - 13/31 
+ disrupted (42%)\n  Cancelled: 17:09\, 17:29\, 17:39\, 17:45\, 17:50\, 18:0
+ 9\, 18:15\, 18:29\, 18:39\, 18:45\, 18:59\, 19:09\n  Delayed 8 min: 17:15\
+ n\nSource: Realtime Trains (actual) + National Rail planner (advance). Aut
+ o-generated.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER;RELATED=START:-PT4H
+DESCRIPTION:Bexley trains AM 0% / PM 42% disrupted
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
 UID:2026-07-26@bexside-trains
-DTSTAMP:20260709T150139Z
+DTSTAMP:20260709T170742Z
 DTSTART;VALUE=DATE:20260726
 DTEND;VALUE=DATE:20260727
 SUMMARY:Bexley trains AM 100% / PM 100% disrupted
@@ -62,40 +80,6 @@ BEGIN:VALARM
 ACTION:DISPLAY
 TRIGGER;RELATED=START:-PT4H
 DESCRIPTION:Bexley trains AM 100% / PM 100% disrupted
-END:VALARM
-END:VEVENT
-BEGIN:VEVENT
-UID:stale-2026-07-09@bexside-trains
-DTSTAMP:20260709T150139Z
-DTSTART;VALUE=DATE:20260709
-DTEND;VALUE=DATE:20260710
-SUMMARY:[!] Bexley trains: data unavailable - check live times
-DESCRIPTION:The automated check could not refresh this day's train data (a 
- data source was unavailable). Treat the disruption status as UNVERIFIED an
- d check National Rail or your app for live times. This clears automaticall
- y on the next good run.
-TRANSP:TRANSPARENT
-BEGIN:VALARM
-ACTION:DISPLAY
-TRIGGER;RELATED=START:-PT4H
-DESCRIPTION:[!] Bexley trains: data unavailable - check live times
-END:VALARM
-END:VEVENT
-BEGIN:VEVENT
-UID:stale-2026-07-10@bexside-trains
-DTSTAMP:20260709T150139Z
-DTSTART;VALUE=DATE:20260710
-DTEND;VALUE=DATE:20260711
-SUMMARY:[!] Bexley trains: data unavailable - check live times
-DESCRIPTION:The automated check could not refresh this day's train data (a 
- data source was unavailable). Treat the disruption status as UNVERIFIED an
- d check National Rail or your app for live times. This clears automaticall
- y on the next good run.
-TRANSP:TRANSPARENT
-BEGIN:VALARM
-ACTION:DISPLAY
-TRIGGER;RELATED=START:-PT4H
-DESCRIPTION:[!] Bexley trains: data unavailable - check live times
 END:VALARM
 END:VEVENT
 END:VCALENDAR
