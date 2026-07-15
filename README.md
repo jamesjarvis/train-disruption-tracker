@@ -2,7 +2,35 @@
 
 Publishes a **daily disruption ratio** for the Bexley ↔ London commute as an iCalendar
 feed (published to GitHub Pages) your family can subscribe to — no accounts, no OAuth.
-It combines two sources:
+
+## 📅 Subscribe
+
+Subscribe once and any day with disrupted trains shows up in your calendar as an
+all-day event (e.g. `Bexley trains AM 100% / PM 100% disrupted`). Clean days show
+nothing. Your calendar app refreshes the feed automatically — nothing to install,
+no account needed.
+
+**On iPhone / Mac (Apple Calendar):**
+tap **[📅 Subscribe](webcal://jamesjarvis.github.io/train-disruption-tracker/disruptions.ics)**
+and confirm. (Or in Calendar: File → **New Calendar Subscription** → paste the link.)
+Leave "ignore alerts" **unticked** and you'll also get a notification at **20:00 the
+evening before** a disrupted day.
+
+**Google Calendar:**
+tap **[📅 Add to Google Calendar](https://calendar.google.com/calendar/r?cid=webcal://jamesjarvis.github.io/train-disruption-tracker/disruptions.ics)**
+— or manually: Other calendars → **From URL** → paste the address below. Note: Google
+ignores alerts embedded in subscribed feeds, so you'll see the events but get no
+evening-before notification.
+
+**Any other calendar app:** add a calendar subscription pointing at:
+
+```
+https://jamesjarvis.github.io/train-disruption-tracker/disruptions.ics
+```
+
+---
+
+The feed combines two sources:
 
 - **Realtime Trains** (actual) for **yesterday, today, tomorrow** — real cancellations
   and severe delays as they happen.
@@ -26,10 +54,7 @@ a record of how the line actually ran. Past days carry no alert; future days ale
 evening before.
 
 Each affected event also carries an **alert set for 20:00 the evening before**, as
-advance warning. Caveat: **Google Calendar ignores alarms embedded in subscribed
-feeds**, so the alert only fires for Apple Calendar subscribers (and only if "ignore
-alerts" is left unticked on the subscription). Google subscribers still see the event,
-just no notification.
+advance warning (Apple Calendar only — see the subscribe notes above).
 
 ## How it works
 
@@ -125,20 +150,9 @@ https://<you>.github.io/<repo>/disruptions.ics
 
 ### 5. Family subscribes
 
-Click to subscribe (phones/desktops hand off to the default calendar app):
-
-**[📅 Subscribe](webcal://jamesjarvis.github.io/train-disruption-tracker/disruptions.ics)**
-
-Raw feed URL (for clients that need `https`, e.g. Google Calendar):
-
-```
-https://jamesjarvis.github.io/train-disruption-tracker/disruptions.ics
-```
-
-- **Google Calendar:** [📅 Add to Google Calendar](https://calendar.google.com/calendar/r?cid=webcal://jamesjarvis.github.io/train-disruption-tracker/disruptions.ics) — or manually: Other calendars → **From URL** → paste the `https://...ics`.
-- **Apple Calendar:** File → **New Calendar Subscription** → paste the `webcal://...`.
-
-Clients re-fetch on their own schedule; events update in place (stable per-day UIDs).
+Share the links from the [📅 Subscribe](#-subscribe) section at the top (swap in your
+own `<you>.github.io/<repo>` URL if you forked this). Clients re-fetch on their own
+schedule; events update in place (stable per-day UIDs).
 
 ## Usage
 
