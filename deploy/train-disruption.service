@@ -13,7 +13,7 @@ ExecStart=/srv/disruption/repo/run.sh
 TimeoutStartSec=900
 
 Environment=HOME=/srv/disruption
-Environment=GIT_SSH_COMMAND=ssh -i /srv/disruption/ssh/id_ed25519 -o IdentitiesOnly=yes -o UserKnownHostsFile=/srv/disruption/ssh/known_hosts
+Environment="GIT_SSH_COMMAND=ssh -i /srv/disruption/ssh/id_ed25519 -o IdentitiesOnly=yes -o UserKnownHostsFile=/srv/disruption/ssh/known_hosts"
 EnvironmentFile=/etc/train-disruption.env
 
 NoNewPrivileges=true
