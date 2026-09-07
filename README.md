@@ -167,26 +167,69 @@ schedule; events update in place (stable per-day UIDs).
 `docs/disruptions.ics` so GitHub Pages serves the update. It needs git configured with a
 remote and non-interactive auth (SSH key, or a stored credential helper).
 
-## Scheduling (launchd, every 2 hours 06:00–20:00)
+## Deployment (Raspberry Pi, systemd)
 
-The committed `com.bexside.disruption.plist.example` uses a `__PROJECT_DIR__`
-placeholder. Generate the real (git-ignored) plist by substituting this repo's absolute
-path, then load it:
+The job runs on the Raspberry Pi (`ssh pi@pi`), not on a laptop, so the feed keeps
+refreshing regardless of whether a Mac is awake. Everything it needs lives under
+`/srv/disruption`, and it touches nothing else on that machine.
+
+| Path | What it is |
+|---|---|
+| `/srv/disruption/repo` | Shallow clone of this repo, branch `main` |
+| `/srv/disruption/repo/state/history.json` | Rolling 60-day history. Not in git |
+| `/srv/disruption/ssh/id_ed25519` | GitHub **deploy key** for this repo only. `pi:pi`, mode 600 |
+| `/srv/disruption/.gitconfig` | Commit identity for the automated pushes |
+| `/etc/train-disruption.env` | Realtime Trains credentials. `root:root`, mode 600 |
+
+`train-disruption.timer` fires `train-disruption.service` at 06:00, 08:00 … 20:00 local
+time, with `Persistent=true` so a run missed while the Pi was off happens at next boot,
+and a randomised delay of up to 3 minutes so the National Rail planner is not hit on the
+exact hour. The service is `Type=oneshot`, runs as `pi`, and is sandboxed with
+`ProtectSystem=strict` / `ProtectHome=true`, so `/srv/disruption` is the only writable
+path it has.
+
+Pushing uses a **deploy key**, not a personal SSH key, and it is passed through
+`GIT_SSH_COMMAND` in the unit rather than `~/.ssh/config` — so no other git operation on
+the Pi is affected by it.
+
+### Installing (or reinstalling) from scratch
 
 ```bash
-sed "s#__PROJECT_DIR__#$(pwd)#g" com.bexside.disruption.plist.example \
-    > com.bexside.disruption.plist
-cp com.bexside.disruption.plist ~/Library/LaunchAgents/
-launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.bexside.disruption.plist
-launchctl kickstart -k gui/$(id -u)/com.bexside.disruption   # run now to test
-tail -f logs/run.log
+sudo install -d -o pi -g pi -m 700 /srv/disruption/ssh
+sudo -u pi ssh-keygen -t ed25519 -f /srv/disruption/ssh/id_ed25519 -N '' \
+    -C 'train-disruption-tracker@pi'
+cat /srv/disruption/ssh/id_ed25519.pub
 ```
 
-If the Mac is asleep at a fire time, launchd runs the missed job on next wake. To remove:
+Add that public key to the repo's **Settings → Deploy keys** with *Allow write access*.
+Then write `/etc/train-disruption.env`:
+
+```
+RTT_USERNAME=...
+RTT_PASSWORD=...
+```
+
+Then run the installer, which is idempotent — safe to re-run to pick up changes:
 
 ```bash
-launchctl bootout gui/$(id -u)/com.bexside.disruption
+git clone git@github.com:jamesjarvis/train-disruption-tracker.git /tmp/tdt
+sudo /tmp/tdt/deploy/install-pi.sh
 ```
+
+It clones to `/srv/disruption/repo`, builds the venv, installs both units, and enables
+the timer. Afterwards the repo is self-hosting: `sudo /srv/disruption/repo/deploy/install-pi.sh`.
+
+### Checking things
+
+```bash
+systemctl list-timers train-disruption.timer   # when it next runs
+systemctl status train-disruption.service      # last run
+journalctl -u train-disruption -n 50           # run history
+sudo systemctl start train-disruption.service  # run now
+```
+
+History is seeded by copying `state/history.json` onto the Pi; without it the rolling
+2-month window rebuilds from the published `.ics` plus new runs.
 
 ## Tuning
 
@@ -202,6 +245,6 @@ Stations, peak windows, horizon, calendar name, and politeness delays all live i
   shows only pre-cancellations + planned engineering, not predicted delays.
 - `delay_minutes` is the **departure** delay at the origin station, not arrival lateness
   at the destination.
-- History is machine-local (`state/history.json`); if the job moves to a fresh machine,
-  the rolling 2-month window rebuilds from whatever is already in the published `.ics`
-  plus new runs.
+- History is machine-local (`state/history.json`, on the Pi); if the job moves to a fresh
+  machine, the rolling 2-month window rebuilds from whatever is already in the published
+  `.ics` plus new runs.

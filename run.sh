@@ -4,7 +4,7 @@
 # (SSH key or a stored credential helper). See README.
 set -euo pipefail
 
-cd /Users/jamesjarvis/development/train-disruption-tracker
+cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 ./.venv/bin/python -m disruption.main
 

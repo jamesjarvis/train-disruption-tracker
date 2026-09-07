@@ -9,5 +9,3 @@ logs/
 *.egg-info/
 # Machine-local rolling history (the published .ics is the durable record).
 state/
-# Local launchd job has machine-specific absolute paths; commit only the template.
-com.bexside.disruption.plist

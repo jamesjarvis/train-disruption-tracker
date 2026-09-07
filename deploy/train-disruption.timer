@@ -1,0 +1,10 @@
+[Unit]
+Description=Refresh the train disruption feed every 2 hours between 06:00 and 20:00
+
+[Timer]
+OnCalendar=*-*-* 06,08,10,12,14,16,18,20:00:00
+RandomizedDelaySec=180
+Persistent=true
+
+[Install]
+WantedBy=timers.target
