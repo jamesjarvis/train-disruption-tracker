@@ -1,60 +1,53 @@
 # Train Disruption Tracker
 
-Publishes a **daily disruption ratio** for the Bexley ↔ London commute as an iCalendar
-feed (published to GitHub Pages) your family can subscribe to — no accounts, no OAuth.
+Publishes a daily disruption ratio for the Bexley ↔ London commute as an iCalendar feed,
+served from GitHub Pages. Subscribe once in any calendar app; days with disrupted trains
+show up as all-day events, clean days show nothing.
 
-## 📅 Subscribe
+## Subscribe
 
-Subscribe once and any day with disrupted trains shows up in your calendar as an
-all-day event (e.g. `Bexley trains AM 100% / PM 100% disrupted`). Clean days show
-nothing. Your calendar app refreshes the feed automatically — nothing to install,
-no account needed.
-
-**On iPhone / Mac (Apple Calendar):**
-tap **[📅 Subscribe](webcal://jamesjarvis.github.io/train-disruption-tracker/disruptions.ics)**
-and confirm. (Or in Calendar: File → **New Calendar Subscription** → paste the link.)
-Leave "ignore alerts" **unticked** and you'll also get a notification at **20:00 the
-evening before** a disrupted day.
-
-**Google Calendar:**
-tap **[📅 Add to Google Calendar](https://calendar.google.com/calendar/r?cid=webcal://jamesjarvis.github.io/train-disruption-tracker/disruptions.ics)**
-— or manually: Other calendars → **From URL** → paste the address below. Note: Google
-ignores alerts embedded in subscribed feeds, so you'll see the events but get no
-evening-before notification.
-
-**Any other calendar app:** add a calendar subscription pointing at:
+The feed lives at:
 
 ```
 https://jamesjarvis.github.io/train-disruption-tracker/disruptions.ics
 ```
 
----
+- Apple Calendar (iPhone/Mac): open the [webcal link](webcal://jamesjarvis.github.io/train-disruption-tracker/disruptions.ics)
+  and confirm, or File → New Calendar Subscription → paste the URL. Leave "ignore alerts"
+  unticked to get a notification at 20:00 the evening before a disrupted day.
+- [Google Calendar](https://calendar.google.com/calendar/r?cid=webcal://jamesjarvis.github.io/train-disruption-tracker/disruptions.ics),
+  or Other calendars → From URL. Google strips alerts from subscribed feeds, so you get
+  the events but no evening-before notification.
+- Anything else: add a calendar subscription pointing at the URL above.
 
-The feed combines two sources:
+Events look like `Bexley trains AM 100% / PM 100% disrupted`, with a description listing
+the affected trains grouped by reason (`Cancelled: 07:28, 07:58` / `Delayed 7 min: 08:14`)
+for each peak window. UIDs are stable per day, so events update in place.
 
-- **Realtime Trains** (actual) for **yesterday, today, tomorrow** — real cancellations
-  and severe delays as they happen.
-- **National Rail journey planner** (advance) for **tomorrow .. ~21 days ahead** —
-  planned engineering works / rail-replacement buses.
+## What it measures
 
-For each day it measures:
+Two peak windows, both via the London Bridge hub (every peak train calls there, whether
+it terminates at Charing Cross or Cannon Street):
 
-- **AM peak** — Bexley → London (07:00–10:00), via the London Bridge hub
-- **PM peak** — London → Bexley (17:00–22:00), via the London Bridge hub
+- AM peak: Bexley → London, 07:00–10:00
+- PM peak: London → Bexley, 17:00–22:00
 
-A train counts as **disrupted** if it is **cancelled**, departs **more than 5 minutes
-late** (actual data), or its planned itinerary uses a **rail-replacement bus**. On any
-day with non-zero disruption it creates one all-day calendar event, e.g. `Bexley trains
-AM 100% / PM 100% disrupted`. The description lists the affected trains grouped by reason
-(e.g. `Cancelled: 07:28, 07:58` / `Delayed 7 min: 08:14`) for each peak window. Clean
-days get no event.
+A train is disrupted if it is cancelled, departs more than 5 minutes late, or its planned
+itinerary uses a rail-replacement bus.
 
-The feed keeps a rolling **~2 months of past days** plus the look-ahead, so it doubles as
-a record of how the line actually ran. Past days carry no alert; future days alert the
-evening before.
+Two sources feed that:
 
-Each affected event also carries an **alert set for 20:00 the evening before**, as
-advance warning (Apple Calendar only — see the subscribe notes above).
+- `src/disruption/rtt.py` — the Realtime Trains API (`api.rtt.io`). Free JSON, HTTP basic
+  auth, booked vs realtime departure times and cancellation status. Covers yesterday,
+  today and tomorrow, and is the source of the cancelled / late signal.
+- `src/disruption/scraper.py` — the National Rail journey planner
+  (`ojp.nationalrail.co.uk/service/timesandfares`). Server-rendered HTML, future-dated,
+  no signup. Covers tomorrow to 20 days out, and is the source of planned engineering
+  works and replacement buses.
+
+The feed keeps a rolling 60 days of past days alongside the look-ahead, so it also serves
+as a record of how the line actually ran. Past days carry no alarm; future days alarm at
+20:00 the evening before.
 
 ## How it works
 
@@ -62,45 +55,34 @@ advance warning (Apple Calendar only — see the subscribe notes above).
 main.py → history.load()
         → analyze.build_actual_report(D-1..D)   via rtt.fetch_trains      (actual)
         → analyze.build_merged_report(D+1)       rtt + scraper, merged     (both)
-        → analyze.build_day_report(D+2..+21)     via scraper.fetch_trains  (planned)
+        → analyze.build_day_report(D+2..+20)     via scraper.fetch_trains  (planned)
         → history.upsert / prune (keep 60 days) / save
         → ics_writer.write_calendar(reports)     rebuilt from scratch each run
 ```
 
-Data sources, each isolated in one module so a site/API change only touches that file:
+History lives in a git-ignored `state/history.json`; the published `.ics` is the durable
+record.
 
-- **`src/disruption/rtt.py`** — Realtime Trains API (`api.rtt.io`): free JSON, HTTP basic
-  auth, gives booked vs realtime departure times and cancellation status. Source of the
-  cancelled / >5-min-late signal.
-- **`src/disruption/scraper.py`** — `ojp.nationalrail.co.uk/service/timesandfares/...`:
-  server-rendered HTML, future-dated, free, no signup. Source of advance engineering /
-  replacement-bus disruption.
+Both sources guard against silent breakage. If neither parses any trains for a day, they
+log a warning and keep the last stored value rather than writing a falsely-clean feed.
+The scraper adds a content-vs-parse backstop: if a planner page clearly describes a
+replacement bus (`sprite-bus`, "replacement bus", "made by bus") yet nothing parses as
+disrupted, it raises instead of reporting a clean day, so a markup change that moves the
+bus markers can't hide disruption.
 
-Both have a "no parseable trains" guard so a silent breakage logs a warning (and keeps
-the last stored value for that day) instead of writing a falsely-clean feed. The scraper
-also carries a **content-vs-parse backstop**: if a planner page clearly describes a
-replacement bus (`sprite-bus` / "replacement bus" / "made by bus") yet no journey parses
-as disrupted, it raises rather than report a false clean day — so a future markup change
-that moves the bus markers can't silently hide disruption. History lives in a git-ignored
-`state/history.json`; the published `.ics` is the durable record.
+The planner renders each journey as a `tr.mtx` summary row followed by detail rows
+(`tr.changes`, `tr.status`) carrying the disruption markers, so the scraper parses each
+journey as that whole group rather than the summary row alone. A journey is disrupted
+when the group contains a `.disruptiondesc` block (the planner only emits one when
+something is wrong), and the reason is that block's short `<h4 class="title">` label,
+not its verbose body text.
 
-> The planner renders each journey as a `tr.mtx` summary row followed by detail rows
-> (`tr.changes`, `tr.status`) that carry the bus/disruption markers, so `scraper.py`
-> parses each journey as that whole group — not the summary row alone. A journey counts
-> as disrupted when the group contains a `.disruptiondesc` block (the planner only emits
-> one when something is wrong — bus, cancellation, or amendment), and the reason is that
-> block's short `<h4 class="title">` label (e.g. "Cancelled"), not its verbose run-on
-> body text.
-
-Finally, if a **live-window day (today/tomorrow)** can't be refreshed from *any* source
-this run (a total outage — RTT dark *and* the planner failing), the feed emits an
-explicit **warning event** (`[!] Bexley trains: data unavailable — check live times`)
-for that day instead of silently serving the last stored (often "clean") value. It
-carries the same evening-before alarm and clears automatically on the next good run.
+If a live-window day (today or tomorrow) can't be refreshed from any source — RTT dark
+and the planner failing — the feed emits `[!] Bexley trains: data unavailable — check
+live times` for that day rather than serving the last stored value. It clears on the next
+good run.
 
 ## Setup
-
-### 1. Install
 
 ```bash
 python3 -m venv .venv
@@ -108,91 +90,52 @@ python3 -m venv .venv
 ./.venv/bin/python -m pytest        # no network
 ```
 
-### 2. Realtime Trains credentials
-
-Sign up (free, personal use) at <https://api.rtt.io/> and note the issued **username**
-and **password**. Provide them either as environment variables:
-
-```bash
-export RTT_USERNAME=... RTT_PASSWORD=...
-```
-
-…or in a git-ignored `secrets/rtt.json` (preferred for the launchd job):
-
-```json
-{ "username": "...", "password": "..." }
-```
-
-Without credentials the run still works but only emits planner (advance) disruption — no
-actual cancellations/delays.
-
-### 3. Generate the feed
+Realtime Trains credentials come from `RTT_USERNAME` / `RTT_PASSWORD`, or a git-ignored
+`secrets/rtt.json` (`{"username": "...", "password": "..."}`), which is what the deployed
+job uses. Sign up free at <https://api.rtt.io/>. Without credentials the run still works,
+but only reports planner disruption — no actual cancellations or delays.
 
 ```bash
-./.venv/bin/python -m disruption.main           # writes docs/disruptions.ics
-./.venv/bin/python -m disruption.main --dry-run # print the .ics, write nothing
-```
-
-### 4. Publish via GitHub Pages (no accounts, no auth)
-
-```bash
-git init && git add -A && git commit -m "Initial commit"
-git remote add origin git@github.com:<you>/<repo>.git
-git push -u origin main
-```
-
-In the GitHub repo: **Settings → Pages → Source = `main` branch, `/docs` folder**.
-The feed is then served at:
-
-```
-https://<you>.github.io/<repo>/disruptions.ics
-```
-
-### 5. Family subscribes
-
-Share the links from the [📅 Subscribe](#-subscribe) section at the top (swap in your
-own `<you>.github.io/<repo>` URL if you forked this). Clients re-fetch on their own
-schedule; events update in place (stable per-day UIDs).
-
-## Usage
-
-```bash
-./.venv/bin/python -m disruption.main              # scrape + write the feed
-./.venv/bin/python -m disruption.main --dry-run    # print the .ics, write nothing
-./.venv/bin/python -m disruption.main --horizon 14 # look further ahead
+./.venv/bin/python -m disruption.main                      # writes docs/disruptions.ics
+./.venv/bin/python -m disruption.main --dry-run            # print the .ics, write nothing
+./.venv/bin/python -m disruption.main --horizon 14         # look further ahead
 ./.venv/bin/python -m disruption.main --output /tmp/x.ics  # custom path
 ```
 
-`run.sh` wraps this: it regenerates the feed, then commits and pushes
-`docs/disruptions.ics` so GitHub Pages serves the update. It needs git configured with a
-remote and non-interactive auth (SSH key, or a stored credential helper).
+`run.sh` wraps that: regenerate the feed, then commit and push `docs/disruptions.ics` so
+Pages serves the update. It needs a git remote and non-interactive auth (SSH key or a
+stored credential helper).
+
+To publish your own fork, push it to GitHub and set Settings → Pages → Source to the
+`main` branch, `/docs` folder. The feed is then at
+`https://<you>.github.io/<repo>/disruptions.ics`.
+
+Stations, peak windows, horizon, calendar name and politeness delays live in
+`src/disruption/config.py`.
 
 ## Deployment (Raspberry Pi, systemd)
 
-The job runs on the Raspberry Pi (`ssh pi@pi`), not on a laptop, so the feed keeps
-refreshing regardless of whether a Mac is awake. Everything it needs lives under
-`/srv/disruption`, and it touches nothing else on that machine.
+The job runs on the Pi (`ssh pi@pi`) rather than a laptop, so the feed refreshes whether
+or not a Mac is awake. Everything it needs is under `/srv/disruption`.
 
 | Path | What it is |
 |---|---|
 | `/srv/disruption/repo` | Shallow clone of this repo, branch `main` |
 | `/srv/disruption/repo/state/history.json` | Rolling 60-day history. Not in git |
-| `/srv/disruption/ssh/id_ed25519` | GitHub **deploy key** for this repo only. `pi:pi`, mode 600 |
+| `/srv/disruption/ssh/id_ed25519` | GitHub deploy key for this repo only. `pi:pi`, mode 600 |
 | `/srv/disruption/.gitconfig` | Commit identity for the automated pushes |
 | `/etc/train-disruption.env` | Realtime Trains credentials. `root:root`, mode 600 |
 
 `train-disruption.timer` fires `train-disruption.service` at 06:00, 08:00 … 20:00 local
 time, with `Persistent=true` so a run missed while the Pi was off happens at next boot,
-and a randomised delay of up to 3 minutes so the National Rail planner is not hit on the
-exact hour. The service is `Type=oneshot`, runs as `pi`, and is sandboxed with
-`ProtectSystem=strict` / `ProtectHome=true`, so `/srv/disruption` is the only writable
-path it has.
+and a randomised delay of up to 3 minutes so the planner is not hit on the exact hour.
+The service is `Type=oneshot`, runs as `pi`, and is sandboxed with `ProtectSystem=strict`
+and `ProtectHome=true`, leaving `/srv/disruption` as its only writable path.
 
-Pushing uses a **deploy key**, not a personal SSH key, and it is passed through
-`GIT_SSH_COMMAND` in the unit rather than `~/.ssh/config` — so no other git operation on
-the Pi is affected by it.
+Pushing uses a deploy key passed through `GIT_SSH_COMMAND` in the unit rather than
+`~/.ssh/config`, so no other git operation on the Pi is affected by it.
 
-### Installing (or reinstalling) from scratch
+### Installing from scratch
 
 ```bash
 sudo install -d -o pi -g pi -m 700 /srv/disruption/ssh
@@ -201,25 +144,27 @@ sudo -u pi ssh-keygen -t ed25519 -f /srv/disruption/ssh/id_ed25519 -N '' \
 cat /srv/disruption/ssh/id_ed25519.pub
 ```
 
-Add that public key to the repo's **Settings → Deploy keys** with *Allow write access*.
-Then write `/etc/train-disruption.env`:
+Add that public key to the repo's Settings → Deploy keys with *Allow write access*, then
+write `/etc/train-disruption.env`:
 
 ```
 RTT_USERNAME=...
 RTT_PASSWORD=...
 ```
 
-Then run the installer, which is idempotent — safe to re-run to pick up changes:
+Then run the installer, which is idempotent:
 
 ```bash
 git clone git@github.com:jamesjarvis/train-disruption-tracker.git /tmp/tdt
 sudo /tmp/tdt/deploy/install-pi.sh
 ```
 
-It clones to `/srv/disruption/repo`, builds the venv, installs both units, and enables
-the timer. Afterwards the repo is self-hosting: `sudo /srv/disruption/repo/deploy/install-pi.sh`.
+It clones to `/srv/disruption/repo`, builds the venv, installs both units and enables the
+timer. After that the repo is self-hosting:
+`sudo /srv/disruption/repo/deploy/install-pi.sh`.
 
-### Checking things
+Seed the history by copying `state/history.json` onto the Pi; without it the rolling
+window rebuilds from the published `.ics` plus new runs.
 
 ```bash
 systemctl list-timers train-disruption.timer   # when it next runs
@@ -228,23 +173,14 @@ journalctl -u train-disruption -n 50           # run history
 sudo systemctl start train-disruption.service  # run now
 ```
 
-History is seeded by copying `state/history.json` onto the Pi; without it the rolling
-2-month window rebuilds from the published `.ics` plus new runs.
-
-## Tuning
-
-Stations, peak windows, horizon, calendar name, and politeness delays all live in
-`src/disruption/config.py`.
-
 ## Limitations
 
-- Scraping breaks if National Rail changes the planner's HTML — `scraper.py` raises and
-  that day's planner refresh is skipped (logged); the last stored value is kept.
-- The planner is future-dated, so it can't see same-day cancellations or delays — that's
-  what the Realtime Trains feed is for, but RTT only covers recent dates. So **tomorrow**
-  shows only pre-cancellations + planned engineering, not predicted delays.
-- `delay_minutes` is the **departure** delay at the origin station, not arrival lateness
-  at the destination.
-- History is machine-local (`state/history.json`, on the Pi); if the job moves to a fresh
-  machine, the rolling 2-month window rebuilds from whatever is already in the published
-  `.ics` plus new runs.
+- If National Rail changes the planner's HTML the scraper raises, that day's planner
+  refresh is skipped and logged, and the last stored value is kept.
+- The planner is future-dated and can't see same-day cancellations or delays; that's what
+  RTT is for, but RTT only covers recent dates. So tomorrow shows pre-cancellations and
+  planned engineering only, not predicted delays.
+- `delay_minutes` is the departure delay at the origin, not arrival lateness at the
+  destination.
+- History is machine-local, so moving the job to a fresh machine rebuilds the rolling
+  window from the published `.ics` plus new runs.
