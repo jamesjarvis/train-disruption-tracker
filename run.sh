@@ -6,6 +6,11 @@ set -euo pipefail
 
 cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+# Replay onto the remote before regenerating: a push from anywhere else would
+# otherwise leave this clone permanently non-fast-forward, wedging every run.
+git fetch origin main
+git rebase --autostash origin/main
+
 ./.venv/bin/python -m disruption.main
 
 git add docs/disruptions.ics
