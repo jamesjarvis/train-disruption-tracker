@@ -19,7 +19,7 @@ from pathlib import Path
 
 import httpx
 
-from . import config, history, ics_writer, rtt
+from . import config, history, ics_writer, journeys, rtt
 from .analyze import build_actual_report, build_day_report, build_merged_report
 from .models import DayReport
 from .rtt import RttError
@@ -31,12 +31,32 @@ def _log(msg: str) -> None:
 
 
 def _record(store: dict[date, DayReport], rep: DayReport, label: str) -> None:
+    if not rep.trains and rep.date in store:
+        rep.trains = store[rep.date].trains
     history.upsert(store, rep)
     flag = "DISRUPTED" if rep.affected else "clean"
     _log(
         f"{rep.date} [{label}] {flag}: AM {rep.am_disrupted}/{rep.am_total} "
         f"({rep.am_pct}%) PM {rep.pm_disrupted}/{rep.pm_total} ({rep.pm_pct}%)"
     )
+
+
+def _collect_journeys(store: dict[date, DayReport], today: date,
+                      client: httpx.Client) -> None:
+    remaining = config.RTT_MAX_SERVICE_FETCHES
+    for offset in range(-config.LIVE_BACK_DAYS, 1):
+        d = today + timedelta(days=offset)
+        if d not in store:
+            continue
+        try:
+            trains, used = journeys.collect(d, store[d].trains, client=client,
+                                            now=datetime.now(), limit=remaining)
+        except (RttError, httpx.HTTPError) as exc:
+            _log(f"WARN {d} [journeys]: {exc} — keeping stored trains")
+            continue
+        store[d].trains = trains
+        remaining -= used
+        _log(f"{d} [journeys] {len(trains)} trains, {used} looked up")
 
 
 def collect_reports(horizon_days: int) -> tuple[list[DayReport], date, list[date]]:
@@ -106,6 +126,9 @@ def collect_reports(horizon_days: int) -> tuple[list[DayReport], date, list[date
                 _record(store, build_day_report(d, client=planner_client), "planner")
             except (ScrapeError, httpx.HTTPError) as exc:
                 _log(f"WARN {d} [planner]: {exc} — keeping stored value")
+
+        if rtt_client is not None:
+            _collect_journeys(store, today, rtt_client)
     finally:
         planner_client.close()
         if rtt_client is not None:

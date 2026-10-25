@@ -12,7 +12,7 @@ import httpx
 import pytest
 
 from disruption import history, main, rtt
-from disruption.models import DayReport
+from disruption.models import DayReport, Journey
 from disruption.rtt import RttError
 from disruption.scraper import ScrapeError
 
@@ -23,6 +23,7 @@ def _isolate(monkeypatch):
     monkeypatch.setattr(history, "load", lambda *a, **k: {})
     monkeypatch.setattr(history, "save", lambda *a, **k: None)
     monkeypatch.setattr(rtt, "open_client", httpx.Client)
+    monkeypatch.setattr(main.journeys, "collect", lambda d, previous, **k: (previous, 0))
     monkeypatch.setattr(main, "build_actual_report",
                         lambda d, **k: (_ for _ in ()).throw(RttError("no actual")))
 
@@ -88,3 +89,39 @@ def test_old_days_stay_in_history_but_leave_the_feed(_isolate, monkeypatch):
     reports, _today, _stale = main.collect_reports(horizon_days=1)
     assert old in saved
     assert old not in [r.date for r in reports]
+
+
+def _journey(d: date) -> Journey:
+    return Journey(f"uid-{d}", d, "am", True, "Cancelled", {})
+
+
+def test_main_attaches_journeys_to_live_days(_isolate, monkeypatch):
+    seen = []
+
+    def collect(d, previous, *, client, now, limit):
+        seen.append(d)
+        return [_journey(d)], 1
+
+    saved = {}
+    monkeypatch.setattr(main.journeys, "collect", collect)
+    monkeypatch.setattr(history, "save", lambda store, *a, **k: saved.update(store))
+    monkeypatch.setattr(main, "build_actual_report", lambda d, **k: _clean(d))
+    monkeypatch.setattr(main, "build_merged_report", lambda d, **k: _clean(d))
+    monkeypatch.setattr(main, "build_day_report", lambda d, **k: _clean(d))
+    main.collect_reports(horizon_days=2)
+    today = date.today()
+    assert seen == [today - timedelta(days=1), today]
+    assert saved[today].trains == [_journey(today)]
+
+
+def test_refresh_without_journeys_keeps_stored_trains(_isolate, monkeypatch):
+    ahead = date.today() + timedelta(days=2)
+    stored = _clean(ahead)
+    stored.trains = [_journey(ahead)]
+    monkeypatch.setattr(history, "load", lambda *a, **k: {ahead: stored})
+    saved = {}
+    monkeypatch.setattr(history, "save", lambda store, *a, **k: saved.update(store))
+    monkeypatch.setattr(main, "build_merged_report", lambda d, **k: _clean(d))
+    monkeypatch.setattr(main, "build_day_report", lambda d, **k: _clean(d))
+    main.collect_reports(horizon_days=2)
+    assert saved[ahead].trains == [_journey(ahead)]
