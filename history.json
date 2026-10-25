@@ -1,4 +1,1581 @@
 {
+  "2026-07-09": {
+    "date": "2026-07-09",
+    "am_total": 35,
+    "am_disrupted": 0,
+    "pm_total": 31,
+    "pm_disrupted": 16,
+    "am_disrupted_trains": [],
+    "pm_disrupted_trains": [
+      {
+        "departure": "2026-07-09T17:15:00",
+        "disrupted": true,
+        "reason": "Delayed 8 min",
+        "cancelled": false,
+        "delay_minutes": 8
+      },
+      {
+        "departure": "2026-07-09T18:01:00",
+        "disrupted": true,
+        "reason": "Delayed 13 min",
+        "cancelled": false,
+        "delay_minutes": 13
+      },
+      {
+        "departure": "2026-07-09T18:09:00",
+        "disrupted": true,
+        "reason": "inbound service late",
+        "cancelled": true,
+        "delay_minutes": 0
+      },
+      {
+        "departure": "2026-07-09T18:15:00",
+        "disrupted": true,
+        "reason": "inbound service late",
+        "cancelled": true,
+        "delay_minutes": 0
+      },
+      {
+        "departure": "2026-07-09T18:29:00",
+        "disrupted": true,
+        "reason": "Delayed 21 min",
+        "cancelled": false,
+        "delay_minutes": 21
+      },
+      {
+        "departure": "2026-07-09T18:39:00",
+        "disrupted": true,
+        "reason": "Delayed 14 min",
+        "cancelled": false,
+        "delay_minutes": 14
+      },
+      {
+        "departure": "2026-07-09T18:45:00",
+        "disrupted": true,
+        "reason": "Delayed 23 min",
+        "cancelled": false,
+        "delay_minutes": 23
+      },
+      {
+        "departure": "2026-07-09T18:59:00",
+        "disrupted": true,
+        "reason": "Delayed 28 min",
+        "cancelled": false,
+        "delay_minutes": 28
+      },
+      {
+        "departure": "2026-07-09T19:09:00",
+        "disrupted": true,
+        "reason": "Delayed 7 min",
+        "cancelled": false,
+        "delay_minutes": 7
+      },
+      {
+        "departure": "2026-07-09T19:15:00",
+        "disrupted": true,
+        "reason": "Delayed 18 min",
+        "cancelled": false,
+        "delay_minutes": 18
+      },
+      {
+        "departure": "2026-07-09T19:29:00",
+        "disrupted": true,
+        "reason": "Delayed 17 min",
+        "cancelled": false,
+        "delay_minutes": 17
+      },
+      {
+        "departure": "2026-07-09T20:15:00",
+        "disrupted": true,
+        "reason": "inbound service late",
+        "cancelled": true,
+        "delay_minutes": 4
+      },
+      {
+        "departure": "2026-07-09T20:45:00",
+        "disrupted": true,
+        "reason": "inbound service late",
+        "cancelled": true,
+        "delay_minutes": 0
+      },
+      {
+        "departure": "2026-07-09T20:59:00",
+        "disrupted": true,
+        "reason": "inbound service late",
+        "cancelled": true,
+        "delay_minutes": 0
+      },
+      {
+        "departure": "2026-07-09T21:15:00",
+        "disrupted": true,
+        "reason": "inbound service late",
+        "cancelled": true,
+        "delay_minutes": 0
+      },
+      {
+        "departure": "2026-07-09T21:45:00",
+        "disrupted": true,
+        "reason": "Delayed 15 min",
+        "cancelled": false,
+        "delay_minutes": 15
+      }
+    ],
+    "trains": []
+  },
+  "2026-07-10": {
+    "date": "2026-07-10",
+    "am_total": 35,
+    "am_disrupted": 0,
+    "pm_total": 31,
+    "pm_disrupted": 0,
+    "am_disrupted_trains": [],
+    "pm_disrupted_trains": [],
+    "trains": []
+  },
+  "2026-07-11": {
+    "date": "2026-07-11",
+    "am_total": 24,
+    "am_disrupted": 1,
+    "pm_total": 20,
+    "pm_disrupted": 0,
+    "am_disrupted_trains": [
+      {
+        "departure": "2026-07-11T09:57:00",
+        "disrupted": true,
+        "reason": "Cancelled",
+        "cancelled": true,
+        "delay_minutes": 16
+      }
+    ],
+    "pm_disrupted_trains": [],
+    "trains": []
+  },
+  "2026-07-12": {
+    "date": "2026-07-12",
+    "am_total": 17,
+    "am_disrupted": 0,
+    "pm_total": 25,
+    "pm_disrupted": 1,
+    "am_disrupted_trains": [],
+    "pm_disrupted_trains": [
+      {
+        "departure": "2026-07-12T17:46:00",
+        "disrupted": true,
+        "reason": "inbound service late",
+        "cancelled": true,
+        "delay_minutes": 5
+      }
+    ],
+    "trains": []
+  },
+  "2026-07-13": {
+    "date": "2026-07-13",
+    "am_total": 35,
+    "am_disrupted": 1,
+    "pm_total": 31,
+    "pm_disrupted": 2,
+    "am_disrupted_trains": [
+      {
+        "departure": "2026-07-13T07:20:00",
+        "disrupted": true,
+        "reason": "Delayed 7 min",
+        "cancelled": false,
+        "delay_minutes": 7
+      }
+    ],
+    "pm_disrupted_trains": [
+      {
+        "departure": "2026-07-13T18:09:00",
+        "disrupted": true,
+        "reason": "Delayed 14 min",
+        "cancelled": false,
+        "delay_minutes": 14
+      },
+      {
+        "departure": "2026-07-13T19:15:00",
+        "disrupted": true,
+        "reason": "Delayed 6 min",
+        "cancelled": false,
+        "delay_minutes": 6
+      }
+    ],
+    "trains": []
+  },
+  "2026-07-14": {
+    "date": "2026-07-14",
+    "am_total": 35,
+    "am_disrupted": 1,
+    "pm_total": 31,
+    "pm_disrupted": 0,
+    "am_disrupted_trains": [
+      {
+        "departure": "2026-07-14T09:12:00",
+        "disrupted": true,
+        "reason": "Delayed 9 min",
+        "cancelled": false,
+        "delay_minutes": 9
+      }
+    ],
+    "pm_disrupted_trains": [],
+    "trains": []
+  },
+  "2026-07-15": {
+    "date": "2026-07-15",
+    "am_total": 35,
+    "am_disrupted": 4,
+    "pm_total": 31,
+    "pm_disrupted": 2,
+    "am_disrupted_trains": [
+      {
+        "departure": "2026-07-15T08:37:00",
+        "disrupted": true,
+        "reason": "signal failure",
+        "cancelled": true,
+        "delay_minutes": 5
+      },
+      {
+        "departure": "2026-07-15T08:50:00",
+        "disrupted": true,
+        "reason": "Delayed 6 min",
+        "cancelled": false,
+        "delay_minutes": 6
+      },
+      {
+        "departure": "2026-07-15T08:57:00",
+        "disrupted": true,
+        "reason": "Delayed 9 min",
+        "cancelled": false,
+        "delay_minutes": 9
+      },
+      {
+        "departure": "2026-07-15T09:12:00",
+        "disrupted": true,
+        "reason": "Delayed 14 min",
+        "cancelled": false,
+        "delay_minutes": 14
+      }
+    ],
+    "pm_disrupted_trains": [
+      {
+        "departure": "2026-07-15T18:01:00",
+        "disrupted": true,
+        "reason": "train fault",
+        "cancelled": true,
+        "delay_minutes": 0
+      },
+      {
+        "departure": "2026-07-15T19:59:00",
+        "disrupted": true,
+        "reason": "Delayed 8 min",
+        "cancelled": false,
+        "delay_minutes": 8
+      }
+    ],
+    "trains": []
+  },
+  "2026-07-16": {
+    "date": "2026-07-16",
+    "am_total": 35,
+    "am_disrupted": 0,
+    "pm_total": 31,
+    "pm_disrupted": 0,
+    "am_disrupted_trains": [],
+    "pm_disrupted_trains": [],
+    "trains": []
+  },
+  "2026-07-17": {
+    "date": "2026-07-17",
+    "am_total": 35,
+    "am_disrupted": 0,
+    "pm_total": 31,
+    "pm_disrupted": 3,
+    "am_disrupted_trains": [],
+    "pm_disrupted_trains": [
+      {
+        "departure": "2026-07-17T19:59:00",
+        "disrupted": true,
+        "reason": "Delayed 21 min",
+        "cancelled": false,
+        "delay_minutes": 21
+      },
+      {
+        "departure": "2026-07-17T20:15:00",
+        "disrupted": true,
+        "reason": "inbound service late",
+        "cancelled": true,
+        "delay_minutes": -4
+      },
+      {
+        "departure": "2026-07-17T20:29:00",
+        "disrupted": true,
+        "reason": "Delayed 12 min",
+        "cancelled": false,
+        "delay_minutes": 12
+      }
+    ],
+    "trains": []
+  },
+  "2026-07-18": {
+    "date": "2026-07-18",
+    "am_total": 24,
+    "am_disrupted": 0,
+    "pm_total": 20,
+    "pm_disrupted": 1,
+    "am_disrupted_trains": [],
+    "pm_disrupted_trains": [
+      {
+        "departure": "2026-07-18T20:45:00",
+        "disrupted": true,
+        "reason": "issue with train crew",
+        "cancelled": true,
+        "delay_minutes": 0
+      }
+    ],
+    "trains": []
+  },
+  "2026-07-19": {
+    "date": "2026-07-19",
+    "am_total": 27,
+    "am_disrupted": 1,
+    "pm_total": 40,
+    "pm_disrupted": 0,
+    "am_disrupted_trains": [
+      {
+        "departure": "2026-07-19T09:49:00",
+        "disrupted": true,
+        "reason": "Delayed 9 min",
+        "cancelled": false,
+        "delay_minutes": 9
+      }
+    ],
+    "pm_disrupted_trains": [],
+    "trains": []
+  },
+  "2026-07-20": {
+    "date": "2026-07-20",
+    "am_total": 35,
+    "am_disrupted": 1,
+    "pm_total": 31,
+    "pm_disrupted": 0,
+    "am_disrupted_trains": [
+      {
+        "departure": "2026-07-20T08:20:00",
+        "disrupted": true,
+        "reason": "Cancelled",
+        "cancelled": true,
+        "delay_minutes": 22
+      }
+    ],
+    "pm_disrupted_trains": [],
+    "trains": []
+  },
+  "2026-07-21": {
+    "date": "2026-07-21",
+    "am_total": 35,
+    "am_disrupted": 0,
+    "pm_total": 31,
+    "pm_disrupted": 7,
+    "am_disrupted_trains": [],
+    "pm_disrupted_trains": [
+      {
+        "departure": "2026-07-21T17:29:00",
+        "disrupted": true,
+        "reason": "Delayed 11 min",
+        "cancelled": false,
+        "delay_minutes": 11
+      },
+      {
+        "departure": "2026-07-21T17:50:00",
+        "disrupted": true,
+        "reason": "Delayed 17 min",
+        "cancelled": false,
+        "delay_minutes": 17
+      },
+      {
+        "departure": "2026-07-21T18:01:00",
+        "disrupted": true,
+        "reason": "Delayed 10 min",
+        "cancelled": false,
+        "delay_minutes": 10
+      },
+      {
+        "departure": "2026-07-21T18:15:00",
+        "disrupted": true,
+        "reason": "Delayed 9 min",
+        "cancelled": false,
+        "delay_minutes": 9
+      },
+      {
+        "departure": "2026-07-21T18:37:00",
+        "disrupted": true,
+        "reason": "Delayed 10 min",
+        "cancelled": false,
+        "delay_minutes": 10
+      },
+      {
+        "departure": "2026-07-21T18:39:00",
+        "disrupted": true,
+        "reason": "Delayed 7 min",
+        "cancelled": false,
+        "delay_minutes": 7
+      },
+      {
+        "departure": "2026-07-21T18:45:00",
+        "disrupted": true,
+        "reason": "Delayed 7 min",
+        "cancelled": false,
+        "delay_minutes": 7
+      }
+    ],
+    "trains": []
+  },
+  "2026-07-22": {
+    "date": "2026-07-22",
+    "am_total": 35,
+    "am_disrupted": 1,
+    "pm_total": 31,
+    "pm_disrupted": 0,
+    "am_disrupted_trains": [
+      {
+        "departure": "2026-07-22T07:28:00",
+        "disrupted": true,
+        "reason": "Delayed 11 min",
+        "cancelled": false,
+        "delay_minutes": 11
+      }
+    ],
+    "pm_disrupted_trains": [],
+    "trains": []
+  },
+  "2026-07-23": {
+    "date": "2026-07-23",
+    "am_total": 35,
+    "am_disrupted": 1,
+    "pm_total": 31,
+    "pm_disrupted": 4,
+    "am_disrupted_trains": [
+      {
+        "departure": "2026-07-23T09:48:00",
+        "disrupted": true,
+        "reason": "Delayed 7 min",
+        "cancelled": false,
+        "delay_minutes": 7
+      }
+    ],
+    "pm_disrupted_trains": [
+      {
+        "departure": "2026-07-23T17:09:00",
+        "disrupted": true,
+        "reason": "Delayed 8 min",
+        "cancelled": false,
+        "delay_minutes": 8
+      },
+      {
+        "departure": "2026-07-23T18:37:00",
+        "disrupted": true,
+        "reason": "Delayed 8 min",
+        "cancelled": false,
+        "delay_minutes": 8
+      },
+      {
+        "departure": "2026-07-23T18:39:00",
+        "disrupted": true,
+        "reason": "Delayed 11 min",
+        "cancelled": false,
+        "delay_minutes": 11
+      },
+      {
+        "departure": "2026-07-23T18:59:00",
+        "disrupted": true,
+        "reason": "Delayed 6 min",
+        "cancelled": false,
+        "delay_minutes": 6
+      }
+    ],
+    "trains": []
+  },
+  "2026-07-24": {
+    "date": "2026-07-24",
+    "am_total": 35,
+    "am_disrupted": 0,
+    "pm_total": 31,
+    "pm_disrupted": 0,
+    "am_disrupted_trains": [],
+    "pm_disrupted_trains": [],
+    "trains": []
+  },
+  "2026-07-25": {
+    "date": "2026-07-25",
+    "am_total": 24,
+    "am_disrupted": 0,
+    "pm_total": 20,
+    "pm_disrupted": 0,
+    "am_disrupted_trains": [],
+    "pm_disrupted_trains": [],
+    "trains": []
+  },
+  "2026-07-26": {
+    "date": "2026-07-26",
+    "am_total": 6,
+    "am_disrupted": 6,
+    "pm_total": 12,
+    "pm_disrupted": 12,
+    "am_disrupted_trains": [
+      {
+        "departure": "2026-07-26T07:18:00",
+        "disrupted": true,
+        "reason": "Rail replacement bus",
+        "cancelled": false,
+        "delay_minutes": null
+      },
+      {
+        "departure": "2026-07-26T07:55:00",
+        "disrupted": true,
+        "reason": "Rail replacement bus",
+        "cancelled": false,
+        "delay_minutes": null
+      },
+      {
+        "departure": "2026-07-26T08:25:00",
+        "disrupted": true,
+        "reason": "Rail replacement bus",
+        "cancelled": false,
+        "delay_minutes": null
+      },
+      {
+        "departure": "2026-07-26T08:55:00",
+        "disrupted": true,
+        "reason": "Rail replacement bus",
+        "cancelled": false,
+        "delay_minutes": null
+      },
+      {
+        "departure": "2026-07-26T09:25:00",
+        "disrupted": true,
+        "reason": "Rail replacement bus",
+        "cancelled": false,
+        "delay_minutes": null
+      },
+      {
+        "departure": "2026-07-26T09:55:00",
+        "disrupted": true,
+        "reason": "Rail replacement bus",
+        "cancelled": false,
+        "delay_minutes": null
+      }
+    ],
+    "pm_disrupted_trains": [
+      {
+        "departure": "2026-07-26T17:00:00",
+        "disrupted": true,
+        "reason": "Rail replacement bus",
+        "cancelled": false,
+        "delay_minutes": null
+      },
+      {
+        "departure": "2026-07-26T17:30:00",
+        "disrupted": true,
+        "reason": "Rail replacement bus",
+        "cancelled": false,
+        "delay_minutes": null
+      },
+      {
+        "departure": "2026-07-26T17:35:00",
+        "disrupted": true,
+        "reason": "Rail replacement bus",
+        "cancelled": false,
+        "delay_minutes": null
+      },
+      {
+        "departure": "2026-07-26T18:00:00",
+        "disrupted": true,
+        "reason": "Rail replacement bus",
+        "cancelled": false,
+        "delay_minutes": null
+      },
+      {
+        "departure": "2026-07-26T18:05:00",
+        "disrupted": true,
+        "reason": "Rail replacement bus",
+        "cancelled": false,
+        "delay_minutes": null
+      },
+      {
+        "departure": "2026-07-26T18:30:00",
+        "disrupted": true,
+        "reason": "Rail replacement bus",
+        "cancelled": false,
+        "delay_minutes": null
+      },
+      {
+        "departure": "2026-07-26T19:00:00",
+        "disrupted": true,
+        "reason": "Rail replacement bus",
+        "cancelled": false,
+        "delay_minutes": null
+      },
+      {
+        "departure": "2026-07-26T19:30:00",
+        "disrupted": true,
+        "reason": "Rail replacement bus",
+        "cancelled": false,
+        "delay_minutes": null
+      },
+      {
+        "departure": "2026-07-26T20:00:00",
+        "disrupted": true,
+        "reason": "Rail replacement bus",
+        "cancelled": false,
+        "delay_minutes": null
+      },
+      {
+        "departure": "2026-07-26T20:30:00",
+        "disrupted": true,
+        "reason": "Rail replacement bus",
+        "cancelled": false,
+        "delay_minutes": null
+      },
+      {
+        "departure": "2026-07-26T21:00:00",
+        "disrupted": true,
+        "reason": "Rail replacement bus",
+        "cancelled": false,
+        "delay_minutes": null
+      },
+      {
+        "departure": "2026-07-26T21:30:00",
+        "disrupted": true,
+        "reason": "Rail replacement bus",
+        "cancelled": false,
+        "delay_minutes": null
+      }
+    ],
+    "trains": []
+  },
+  "2026-07-27": {
+    "date": "2026-07-27",
+    "am_total": 27,
+    "am_disrupted": 2,
+    "pm_total": 25,
+    "pm_disrupted": 0,
+    "am_disrupted_trains": [
+      {
+        "departure": "2026-07-27T07:30:00",
+        "disrupted": true,
+        "reason": "problem with train",
+        "cancelled": true,
+        "delay_minutes": 0
+      },
+      {
+        "departure": "2026-07-27T08:57:00",
+        "disrupted": true,
+        "reason": "Delayed 7 min",
+        "cancelled": false,
+        "delay_minutes": 7
+      }
+    ],
+    "pm_disrupted_trains": [],
+    "trains": []
+  },
+  "2026-07-28": {
+    "date": "2026-07-28",
+    "am_total": 27,
+    "am_disrupted": 0,
+    "pm_total": 25,
+    "pm_disrupted": 4,
+    "am_disrupted_trains": [],
+    "pm_disrupted_trains": [
+      {
+        "departure": "2026-07-28T20:14:00",
+        "disrupted": true,
+        "reason": "inbound service late",
+        "cancelled": true,
+        "delay_minutes": 2
+      },
+      {
+        "departure": "2026-07-28T20:28:00",
+        "disrupted": true,
+        "reason": "Delayed 27 min",
+        "cancelled": false,
+        "delay_minutes": 27
+      },
+      {
+        "departure": "2026-07-28T21:14:00",
+        "disrupted": true,
+        "reason": "Delayed 13 min",
+        "cancelled": false,
+        "delay_minutes": 13
+      },
+      {
+        "departure": "2026-07-28T21:28:00",
+        "disrupted": true,
+        "reason": "Delayed 6 min",
+        "cancelled": false,
+        "delay_minutes": 6
+      }
+    ],
+    "trains": []
+  },
+  "2026-07-29": {
+    "date": "2026-07-29",
+    "am_total": 27,
+    "am_disrupted": 0,
+    "pm_total": 25,
+    "pm_disrupted": 1,
+    "am_disrupted_trains": [],
+    "pm_disrupted_trains": [
+      {
+        "departure": "2026-07-29T19:58:00",
+        "disrupted": true,
+        "reason": "Delayed 6 min",
+        "cancelled": false,
+        "delay_minutes": 6
+      }
+    ],
+    "trains": []
+  },
+  "2026-07-30": {
+    "date": "2026-07-30",
+    "am_total": 27,
+    "am_disrupted": 0,
+    "pm_total": 25,
+    "pm_disrupted": 0,
+    "am_disrupted_trains": [],
+    "pm_disrupted_trains": [],
+    "trains": []
+  },
+  "2026-07-31": {
+    "date": "2026-07-31",
+    "am_total": 27,
+    "am_disrupted": 0,
+    "pm_total": 25,
+    "pm_disrupted": 9,
+    "am_disrupted_trains": [],
+    "pm_disrupted_trains": [
+      {
+        "departure": "2026-07-31T17:58:00",
+        "disrupted": true,
+        "reason": "Delayed 15 min",
+        "cancelled": false,
+        "delay_minutes": 15
+      },
+      {
+        "departure": "2026-07-31T18:07:00",
+        "disrupted": true,
+        "reason": "Delayed 25 min",
+        "cancelled": false,
+        "delay_minutes": 25
+      },
+      {
+        "departure": "2026-07-31T18:13:00",
+        "disrupted": true,
+        "reason": "Delayed 22 min",
+        "cancelled": false,
+        "delay_minutes": 22
+      },
+      {
+        "departure": "2026-07-31T18:28:00",
+        "disrupted": true,
+        "reason": "Delayed 10 min",
+        "cancelled": false,
+        "delay_minutes": 10
+      },
+      {
+        "departure": "2026-07-31T18:37:00",
+        "disrupted": true,
+        "reason": "Delayed 20 min",
+        "cancelled": false,
+        "delay_minutes": 20
+      },
+      {
+        "departure": "2026-07-31T18:39:00",
+        "disrupted": true,
+        "reason": "Delayed 39 min",
+        "cancelled": false,
+        "delay_minutes": 39
+      },
+      {
+        "departure": "2026-07-31T19:07:00",
+        "disrupted": true,
+        "reason": "Delayed 13 min",
+        "cancelled": false,
+        "delay_minutes": 13
+      },
+      {
+        "departure": "2026-07-31T19:09:00",
+        "disrupted": true,
+        "reason": "Delayed 13 min",
+        "cancelled": false,
+        "delay_minutes": 13
+      },
+      {
+        "departure": "2026-07-31T19:44:00",
+        "disrupted": true,
+        "reason": "Delayed 15 min",
+        "cancelled": false,
+        "delay_minutes": 15
+      }
+    ],
+    "trains": []
+  },
+  "2026-08-01": {
+    "date": "2026-08-01",
+    "am_total": 24,
+    "am_disrupted": 1,
+    "pm_total": 20,
+    "pm_disrupted": 1,
+    "am_disrupted_trains": [
+      {
+        "departure": "2026-08-01T09:57:00",
+        "disrupted": true,
+        "reason": "Delayed 8 min",
+        "cancelled": false,
+        "delay_minutes": 8
+      }
+    ],
+    "pm_disrupted_trains": [
+      {
+        "departure": "2026-08-01T19:15:00",
+        "disrupted": true,
+        "reason": "Delayed 10 min",
+        "cancelled": false,
+        "delay_minutes": 10
+      }
+    ],
+    "trains": []
+  },
+  "2026-08-02": {
+    "date": "2026-08-02",
+    "am_total": 16,
+    "am_disrupted": 0,
+    "pm_total": 20,
+    "pm_disrupted": 0,
+    "am_disrupted_trains": [],
+    "pm_disrupted_trains": [],
+    "trains": []
+  },
+  "2026-08-03": {
+    "date": "2026-08-03",
+    "am_total": 27,
+    "am_disrupted": 1,
+    "pm_total": 28,
+    "pm_disrupted": 0,
+    "am_disrupted_trains": [
+      {
+        "departure": "2026-08-03T09:46:00",
+        "disrupted": true,
+        "reason": "Delayed 7 min",
+        "cancelled": false,
+        "delay_minutes": 7
+      }
+    ],
+    "pm_disrupted_trains": [],
+    "trains": []
+  },
+  "2026-08-04": {
+    "date": "2026-08-04",
+    "am_total": 27,
+    "am_disrupted": 1,
+    "pm_total": 25,
+    "pm_disrupted": 0,
+    "am_disrupted_trains": [
+      {
+        "departure": "2026-08-04T09:57:00",
+        "disrupted": true,
+        "reason": "Delayed 7 min",
+        "cancelled": false,
+        "delay_minutes": 7
+      }
+    ],
+    "pm_disrupted_trains": [],
+    "trains": []
+  },
+  "2026-08-05": {
+    "date": "2026-08-05",
+    "am_total": 27,
+    "am_disrupted": 0,
+    "pm_total": 25,
+    "pm_disrupted": 2,
+    "am_disrupted_trains": [],
+    "pm_disrupted_trains": [
+      {
+        "departure": "2026-08-05T19:44:00",
+        "disrupted": true,
+        "reason": "Delayed 14 min",
+        "cancelled": false,
+        "delay_minutes": 14
+      },
+      {
+        "departure": "2026-08-05T21:44:00",
+        "disrupted": true,
+        "reason": "Delayed 11 min",
+        "cancelled": false,
+        "delay_minutes": 11
+      }
+    ],
+    "trains": []
+  },
+  "2026-08-06": {
+    "date": "2026-08-06",
+    "am_total": 27,
+    "am_disrupted": 0,
+    "pm_total": 25,
+    "pm_disrupted": 2,
+    "am_disrupted_trains": [],
+    "pm_disrupted_trains": [
+      {
+        "departure": "2026-08-06T17:09:00",
+        "disrupted": true,
+        "reason": "Delayed 12 min",
+        "cancelled": false,
+        "delay_minutes": 12
+      },
+      {
+        "departure": "2026-08-06T19:58:00",
+        "disrupted": true,
+        "reason": "Delayed 8 min",
+        "cancelled": false,
+        "delay_minutes": 8
+      }
+    ],
+    "trains": []
+  },
+  "2026-08-07": {
+    "date": "2026-08-07",
+    "am_total": 27,
+    "am_disrupted": 0,
+    "pm_total": 25,
+    "pm_disrupted": 0,
+    "am_disrupted_trains": [],
+    "pm_disrupted_trains": [],
+    "trains": []
+  },
+  "2026-08-08": {
+    "date": "2026-08-08",
+    "am_total": 25,
+    "am_disrupted": 0,
+    "pm_total": 20,
+    "pm_disrupted": 0,
+    "am_disrupted_trains": [],
+    "pm_disrupted_trains": [],
+    "trains": []
+  },
+  "2026-08-09": {
+    "date": "2026-08-09",
+    "am_total": 12,
+    "am_disrupted": 0,
+    "pm_total": 0,
+    "pm_disrupted": 0,
+    "am_disrupted_trains": [],
+    "pm_disrupted_trains": [],
+    "trains": []
+  },
+  "2026-08-10": {
+    "date": "2026-08-10",
+    "am_total": 27,
+    "am_disrupted": 1,
+    "pm_total": 25,
+    "pm_disrupted": 0,
+    "am_disrupted_trains": [
+      {
+        "departure": "2026-08-10T07:40:00",
+        "disrupted": true,
+        "reason": "fire",
+        "cancelled": true,
+        "delay_minutes": 2
+      }
+    ],
+    "pm_disrupted_trains": [],
+    "trains": []
+  },
+  "2026-08-11": {
+    "date": "2026-08-11",
+    "am_total": 27,
+    "am_disrupted": 0,
+    "pm_total": 25,
+    "pm_disrupted": 0,
+    "am_disrupted_trains": [],
+    "pm_disrupted_trains": [],
+    "trains": []
+  },
+  "2026-08-12": {
+    "date": "2026-08-12",
+    "am_total": 27,
+    "am_disrupted": 0,
+    "pm_total": 29,
+    "pm_disrupted": 2,
+    "am_disrupted_trains": [],
+    "pm_disrupted_trains": [
+      {
+        "departure": "2026-08-12T17:06:00",
+        "disrupted": true,
+        "reason": "Delayed 7 min",
+        "cancelled": false,
+        "delay_minutes": 7
+      },
+      {
+        "departure": "2026-08-12T17:07:00",
+        "disrupted": true,
+        "reason": "Delayed 9 min",
+        "cancelled": false,
+        "delay_minutes": 9
+      }
+    ],
+    "trains": []
+  },
+  "2026-08-13": {
+    "date": "2026-08-13",
+    "am_total": 27,
+    "am_disrupted": 0,
+    "pm_total": 25,
+    "pm_disrupted": 2,
+    "am_disrupted_trains": [],
+    "pm_disrupted_trains": [
+      {
+        "departure": "2026-08-13T19:09:00",
+        "disrupted": true,
+        "reason": "inbound service late",
+        "cancelled": true,
+        "delay_minutes": 0
+      },
+      {
+        "departure": "2026-08-13T19:58:00",
+        "disrupted": true,
+        "reason": "Delayed 6 min",
+        "cancelled": false,
+        "delay_minutes": 6
+      }
+    ],
+    "trains": []
+  },
+  "2026-08-14": {
+    "date": "2026-08-14",
+    "am_total": 27,
+    "am_disrupted": 1,
+    "pm_total": 51,
+    "pm_disrupted": 11,
+    "am_disrupted_trains": [
+      {
+        "departure": "2026-08-14T07:15:00",
+        "disrupted": true,
+        "reason": "Delayed 11 min",
+        "cancelled": false,
+        "delay_minutes": 11
+      }
+    ],
+    "pm_disrupted_trains": [
+      {
+        "departure": "2026-08-14T17:05:00",
+        "disrupted": true,
+        "reason": "Delayed 9 min",
+        "cancelled": false,
+        "delay_minutes": 9
+      },
+      {
+        "departure": "2026-08-14T17:06:00",
+        "disrupted": true,
+        "reason": "Delayed 11 min",
+        "cancelled": false,
+        "delay_minutes": 11
+      },
+      {
+        "departure": "2026-08-14T17:10:00",
+        "disrupted": true,
+        "reason": "Delayed 6 min",
+        "cancelled": false,
+        "delay_minutes": 6
+      },
+      {
+        "departure": "2026-08-14T17:12:00",
+        "disrupted": true,
+        "reason": "Delayed 10 min",
+        "cancelled": false,
+        "delay_minutes": 10
+      },
+      {
+        "departure": "2026-08-14T17:16:00",
+        "disrupted": true,
+        "reason": "Delayed 9 min",
+        "cancelled": false,
+        "delay_minutes": 9
+      },
+      {
+        "departure": "2026-08-14T17:25:00",
+        "disrupted": true,
+        "reason": "Delayed 9 min",
+        "cancelled": false,
+        "delay_minutes": 9
+      },
+      {
+        "departure": "2026-08-14T17:28:00",
+        "disrupted": true,
+        "reason": "inbound service late",
+        "cancelled": true,
+        "delay_minutes": 0
+      },
+      {
+        "departure": "2026-08-14T17:35:00",
+        "disrupted": true,
+        "reason": "Delayed 13 min",
+        "cancelled": false,
+        "delay_minutes": 13
+      },
+      {
+        "departure": "2026-08-14T17:36:00",
+        "disrupted": true,
+        "reason": "Delayed 8 min",
+        "cancelled": false,
+        "delay_minutes": 8
+      },
+      {
+        "departure": "2026-08-14T17:40:00",
+        "disrupted": true,
+        "reason": "Delayed 14 min",
+        "cancelled": false,
+        "delay_minutes": 14
+      },
+      {
+        "departure": "2026-08-14T17:44:00",
+        "disrupted": true,
+        "reason": "Delayed 19 min",
+        "cancelled": false,
+        "delay_minutes": 19
+      }
+    ],
+    "trains": []
+  },
+  "2026-08-15": {
+    "date": "2026-08-15",
+    "am_total": 24,
+    "am_disrupted": 1,
+    "pm_total": 20,
+    "pm_disrupted": 0,
+    "am_disrupted_trains": [
+      {
+        "departure": "2026-08-15T07:48:00",
+        "disrupted": true,
+        "reason": "Delayed 9 min",
+        "cancelled": false,
+        "delay_minutes": 9
+      }
+    ],
+    "pm_disrupted_trains": [],
+    "trains": []
+  },
+  "2026-08-16": {
+    "date": "2026-08-16",
+    "am_total": 12,
+    "am_disrupted": 2,
+    "pm_total": 0,
+    "pm_disrupted": 0,
+    "am_disrupted_trains": [
+      {
+        "departure": "2026-08-16T07:03:00",
+        "disrupted": true,
+        "reason": "Delayed 14 min",
+        "cancelled": false,
+        "delay_minutes": 14
+      },
+      {
+        "departure": "2026-08-16T07:29:00",
+        "disrupted": true,
+        "reason": "Delayed 6 min",
+        "cancelled": false,
+        "delay_minutes": 6
+      }
+    ],
+    "pm_disrupted_trains": [],
+    "trains": []
+  },
+  "2026-08-17": {
+    "date": "2026-08-17",
+    "am_total": 35,
+    "am_disrupted": 0,
+    "pm_total": 43,
+    "pm_disrupted": 9,
+    "am_disrupted_trains": [],
+    "pm_disrupted_trains": [
+      {
+        "departure": "2026-08-17T17:06:00",
+        "disrupted": true,
+        "reason": "inbound service late",
+        "cancelled": true,
+        "delay_minutes": 0
+      },
+      {
+        "departure": "2026-08-17T17:10:00",
+        "disrupted": true,
+        "reason": "problem with track",
+        "cancelled": true,
+        "delay_minutes": 0
+      },
+      {
+        "departure": "2026-08-17T17:11:00",
+        "disrupted": true,
+        "reason": "Delayed 6 min",
+        "cancelled": false,
+        "delay_minutes": 6
+      },
+      {
+        "departure": "2026-08-17T17:45:00",
+        "disrupted": true,
+        "reason": "Delayed 12 min",
+        "cancelled": false,
+        "delay_minutes": 12
+      },
+      {
+        "departure": "2026-08-17T18:09:00",
+        "disrupted": true,
+        "reason": "Delayed 10 min",
+        "cancelled": false,
+        "delay_minutes": 10
+      },
+      {
+        "departure": "2026-08-17T18:29:00",
+        "disrupted": true,
+        "reason": "Delayed 7 min",
+        "cancelled": false,
+        "delay_minutes": 7
+      },
+      {
+        "departure": "2026-08-17T18:39:00",
+        "disrupted": true,
+        "reason": "Delayed 15 min",
+        "cancelled": false,
+        "delay_minutes": 15
+      },
+      {
+        "departure": "2026-08-17T19:15:00",
+        "disrupted": true,
+        "reason": "Delayed 7 min",
+        "cancelled": false,
+        "delay_minutes": 7
+      },
+      {
+        "departure": "2026-08-17T20:15:00",
+        "disrupted": true,
+        "reason": "Delayed 6 min",
+        "cancelled": false,
+        "delay_minutes": 6
+      }
+    ],
+    "trains": []
+  },
+  "2026-08-18": {
+    "date": "2026-08-18",
+    "am_total": 35,
+    "am_disrupted": 3,
+    "pm_total": 31,
+    "pm_disrupted": 9,
+    "am_disrupted_trains": [
+      {
+        "departure": "2026-08-18T09:00:00",
+        "disrupted": true,
+        "reason": "Delayed 11 min",
+        "cancelled": false,
+        "delay_minutes": 11
+      },
+      {
+        "departure": "2026-08-18T09:12:00",
+        "disrupted": true,
+        "reason": "Delayed 8 min",
+        "cancelled": false,
+        "delay_minutes": 8
+      },
+      {
+        "departure": "2026-08-18T09:57:00",
+        "disrupted": true,
+        "reason": "Delayed 8 min",
+        "cancelled": false,
+        "delay_minutes": 8
+      }
+    ],
+    "pm_disrupted_trains": [
+      {
+        "departure": "2026-08-18T18:39:00",
+        "disrupted": true,
+        "reason": "Delayed 8 min",
+        "cancelled": false,
+        "delay_minutes": 8
+      },
+      {
+        "departure": "2026-08-18T20:15:00",
+        "disrupted": true,
+        "reason": "Delayed 13 min",
+        "cancelled": false,
+        "delay_minutes": 13
+      },
+      {
+        "departure": "2026-08-18T20:29:00",
+        "disrupted": true,
+        "reason": "Delayed 37 min",
+        "cancelled": false,
+        "delay_minutes": 37
+      },
+      {
+        "departure": "2026-08-18T20:45:00",
+        "disrupted": true,
+        "reason": "inbound service late",
+        "cancelled": true,
+        "delay_minutes": 38
+      },
+      {
+        "departure": "2026-08-18T20:59:00",
+        "disrupted": true,
+        "reason": "fire away from the railway",
+        "cancelled": true,
+        "delay_minutes": 0
+      },
+      {
+        "departure": "2026-08-18T21:15:00",
+        "disrupted": true,
+        "reason": "fire away from the railway",
+        "cancelled": true,
+        "delay_minutes": 0
+      },
+      {
+        "departure": "2026-08-18T21:29:00",
+        "disrupted": true,
+        "reason": "fire away from the railway",
+        "cancelled": true,
+        "delay_minutes": 0
+      },
+      {
+        "departure": "2026-08-18T21:45:00",
+        "disrupted": true,
+        "reason": "fire away from the railway",
+        "cancelled": true,
+        "delay_minutes": 0
+      },
+      {
+        "departure": "2026-08-18T21:59:00",
+        "disrupted": true,
+        "reason": "fire away from the railway",
+        "cancelled": true,
+        "delay_minutes": 0
+      }
+    ],
+    "trains": []
+  },
+  "2026-08-19": {
+    "date": "2026-08-19",
+    "am_total": 35,
+    "am_disrupted": 9,
+    "pm_total": 31,
+    "pm_disrupted": 1,
+    "am_disrupted_trains": [
+      {
+        "departure": "2026-08-19T07:13:00",
+        "disrupted": true,
+        "reason": "problem with train",
+        "cancelled": true,
+        "delay_minutes": 0
+      },
+      {
+        "departure": "2026-08-19T07:18:00",
+        "disrupted": true,
+        "reason": "Delayed 9 min",
+        "cancelled": false,
+        "delay_minutes": 9
+      },
+      {
+        "departure": "2026-08-19T07:48:00",
+        "disrupted": true,
+        "reason": "Delayed 10 min",
+        "cancelled": false,
+        "delay_minutes": 10
+      },
+      {
+        "departure": "2026-08-19T07:58:00",
+        "disrupted": true,
+        "reason": "Delayed 9 min",
+        "cancelled": false,
+        "delay_minutes": 9
+      },
+      {
+        "departure": "2026-08-19T07:59:00",
+        "disrupted": true,
+        "reason": "Delayed 6 min",
+        "cancelled": false,
+        "delay_minutes": 6
+      },
+      {
+        "departure": "2026-08-19T08:12:00",
+        "disrupted": true,
+        "reason": "Delayed 12 min",
+        "cancelled": false,
+        "delay_minutes": 12
+      },
+      {
+        "departure": "2026-08-19T09:00:00",
+        "disrupted": true,
+        "reason": "Delayed 6 min",
+        "cancelled": false,
+        "delay_minutes": 6
+      },
+      {
+        "departure": "2026-08-19T09:48:00",
+        "disrupted": true,
+        "reason": "Delayed 21 min",
+        "cancelled": false,
+        "delay_minutes": 21
+      },
+      {
+        "departure": "2026-08-19T09:57:00",
+        "disrupted": true,
+        "reason": "Delayed 6 min",
+        "cancelled": false,
+        "delay_minutes": 6
+      }
+    ],
+    "pm_disrupted_trains": [
+      {
+        "departure": "2026-08-19T18:39:00",
+        "disrupted": true,
+        "reason": "Delayed 8 min",
+        "cancelled": false,
+        "delay_minutes": 8
+      }
+    ],
+    "trains": []
+  },
+  "2026-08-20": {
+    "date": "2026-08-20",
+    "am_total": 23,
+    "am_disrupted": 0,
+    "pm_total": 31,
+    "pm_disrupted": 1,
+    "am_disrupted_trains": [],
+    "pm_disrupted_trains": [
+      {
+        "departure": "2026-08-20T18:39:00",
+        "disrupted": true,
+        "reason": "Delayed 7 min",
+        "cancelled": false,
+        "delay_minutes": 7
+      }
+    ],
+    "trains": []
+  },
+  "2026-08-21": {
+    "date": "2026-08-21",
+    "am_total": 35,
+    "am_disrupted": 0,
+    "pm_total": 31,
+    "pm_disrupted": 3,
+    "am_disrupted_trains": [],
+    "pm_disrupted_trains": [
+      {
+        "departure": "2026-08-21T18:01:00",
+        "disrupted": true,
+        "reason": "Delayed 22 min",
+        "cancelled": false,
+        "delay_minutes": 22
+      },
+      {
+        "departure": "2026-08-21T18:37:00",
+        "disrupted": true,
+        "reason": "Delayed 6 min",
+        "cancelled": false,
+        "delay_minutes": 6
+      },
+      {
+        "departure": "2026-08-21T18:45:00",
+        "disrupted": true,
+        "reason": "inbound service late",
+        "cancelled": true,
+        "delay_minutes": 0
+      }
+    ],
+    "trains": []
+  },
+  "2026-08-22": {
+    "date": "2026-08-22",
+    "am_total": 24,
+    "am_disrupted": 1,
+    "pm_total": 20,
+    "pm_disrupted": 1,
+    "am_disrupted_trains": [
+      {
+        "departure": "2026-08-22T09:48:00",
+        "disrupted": true,
+        "reason": "Delayed 12 min",
+        "cancelled": false,
+        "delay_minutes": 12
+      }
+    ],
+    "pm_disrupted_trains": [
+      {
+        "departure": "2026-08-22T21:59:00",
+        "disrupted": true,
+        "reason": "Delayed 7 min",
+        "cancelled": false,
+        "delay_minutes": 7
+      }
+    ],
+    "trains": []
+  },
+  "2026-08-23": {
+    "date": "2026-08-23",
+    "am_total": 17,
+    "am_disrupted": 1,
+    "pm_total": 20,
+    "pm_disrupted": 0,
+    "am_disrupted_trains": [
+      {
+        "departure": "2026-08-23T09:29:00",
+        "disrupted": true,
+        "reason": "Delayed 6 min",
+        "cancelled": false,
+        "delay_minutes": 6
+      }
+    ],
+    "pm_disrupted_trains": [],
+    "trains": []
+  },
+  "2026-08-24": {
+    "date": "2026-08-24",
+    "am_total": 35,
+    "am_disrupted": 1,
+    "pm_total": 31,
+    "pm_disrupted": 2,
+    "am_disrupted_trains": [
+      {
+        "departure": "2026-08-24T08:57:00",
+        "disrupted": true,
+        "reason": "Delayed 13 min",
+        "cancelled": false,
+        "delay_minutes": 13
+      }
+    ],
+    "pm_disrupted_trains": [
+      {
+        "departure": "2026-08-24T18:39:00",
+        "disrupted": true,
+        "reason": "Delayed 9 min",
+        "cancelled": false,
+        "delay_minutes": 9
+      },
+      {
+        "departure": "2026-08-24T20:45:00",
+        "disrupted": true,
+        "reason": "Delayed 13 min",
+        "cancelled": false,
+        "delay_minutes": 13
+      }
+    ],
+    "trains": []
+  },
+  "2026-08-25": {
+    "date": "2026-08-25",
+    "am_total": 35,
+    "am_disrupted": 0,
+    "pm_total": 31,
+    "pm_disrupted": 0,
+    "am_disrupted_trains": [],
+    "pm_disrupted_trains": [],
+    "trains": []
+  },
   "2026-08-26": {
     "date": "2026-08-26",
     "am_total": 23,
