@@ -168,3 +168,97 @@ def test_fetch_service_cancelled_call_is_not_a_cancelled_journey():
 def test_open_client_without_token_is_none(monkeypatch):
     monkeypatch.setattr(config, "RTT_TOKEN", None)
     assert rtt.open_client() is None
+
+
+def test_terminates_and_starts_short_are_not_cancelled_calls():
+    lbg_terminates = _location("LBG", arr=("2026-10-23T07:52:00+01:00", "2026-10-23T07:52:00+01:00"),
+                               dep=("2026-10-23T07:53:00+01:00", None), display="TERMINATES")
+    lbg_terminates["temporalData"]["departure"]["isCancelled"] = True
+    client = _client(_service_payload(
+        _location("BXY", dep=("2026-10-23T07:28:00+01:00", "2026-10-23T07:28:00+01:00")),
+        lbg_terminates,
+        _location("CST", arr=("2026-10-23T07:58:00+01:00", None), display="CANCELLED"),
+    ))
+    cancelled, _r, calls = fetch_service("gb-nr:L01525:2026-10-23", "BXY", client=client)
+    assert not calls["LBG"].cancelled and calls["CST"].cancelled and not cancelled
+
+
+def test_starts_at_board_call_is_not_a_cancelled_journey():
+    lbg_starts = _location("LBG", arr=("2026-10-23T17:59:00+01:00", None),
+                           dep=("2026-10-23T18:00:00+01:00", "2026-10-23T18:01:00+01:00"), display="STARTS")
+    lbg_starts["temporalData"]["arrival"]["isCancelled"] = True
+    client = _client(_service_payload(
+        _location("CHX", dep=("2026-10-23T17:53:00+01:00", None), display="CANCELLED"),
+        lbg_starts,
+        _location("BXY", arr=("2026-10-23T18:24:00+01:00", "2026-10-23T18:25:00+01:00")),
+    ))
+    cancelled, _r, calls = fetch_service("gb-nr:L01525:2026-10-23", "LBG", client=client)
+    assert not cancelled and not calls["LBG"].cancelled and calls["CHX"].cancelled
+
+
+def test_diverted_call_counts_as_cancelled():
+    client = _client(_service_payload(
+        _location("BXY", dep=("2026-10-23T07:28:00+01:00", "2026-10-23T07:28:00+01:00")),
+        _location("CST", arr=("2026-10-23T07:58:00+01:00", None), display="DIVERTED"),
+    ))
+    _c, _r, calls = fetch_service("gb-nr:L01525:2026-10-23", "BXY", client=client)
+    assert calls["CST"].cancelled
+
+
+def test_replacement_bus_service_has_bus_reason():
+    payload = _service_payload(
+        _location("BXY", dep=("2026-10-23T07:28:00+01:00", "2026-10-23T07:28:00+01:00")),
+        _location("LBG", arr=("2026-10-23T08:10:00+01:00", "2026-10-23T08:10:00+01:00")),
+    )
+    payload["service"]["scheduleMetadata"] = {"modeType": "REPLACEMENT_BUS"}
+    _c, reason, _calls = fetch_service("gb-nr:L01525:2026-10-23", "BXY", client=_client(payload))
+    assert reason == "Rail replacement bus"
+
+
+def test_fetch_service_queries_identity_and_departure_date():
+    seen: list[httpx.Request] = []
+    client = _client(_service_payload(), seen=seen)
+    fetch_service("gb-nr:L01525:2026-10-23", "BXY", client=client)
+    assert seen[0].url.params["identity"] == "L01525"
+    assert seen[0].url.params["departureDate"] == "2026-10-23"
+
+
+def _status_client(*codes: int, seen: list | None = None) -> httpx.Client:
+    queue = list(codes)
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        if seen is not None:
+            seen.append(request)
+        code = queue.pop(0)
+        headers = {"Retry-After": "7"} if code == 429 else {}
+        return httpx.Response(code, json={"services": []}, headers=headers)
+
+    return httpx.Client(transport=httpx.MockTransport(handler), base_url=config.RTT_BASE)
+
+
+def test_client_errors_are_not_retried():
+    seen: list = []
+    with pytest.raises(httpx.HTTPStatusError):
+        rtt._get(_status_client(404, 200, seen=seen), "/gb-nr/service", {})
+    assert len(seen) == 1
+
+
+def test_rate_limit_waits_for_retry_after(monkeypatch):
+    slept: list[float] = []
+    monkeypatch.setattr(rtt._time, "sleep", slept.append)
+    assert rtt._get(_status_client(429, 200), "/gb-nr/location", {}).status_code == 200
+    assert 7 in slept
+
+
+def test_requests_are_counted():
+    before = rtt.requests_made
+    rtt._get(_status_client(500, 200), "/gb-nr/location", {})
+    assert rtt.requests_made - before == 2
+
+
+def test_search_tolerates_missing_departure_date():
+    service = _line_up("2026-10-23T07:28:00+01:00")
+    del service["scheduleMetadata"]["departureDate"]
+    found = search_services("BXY", "LBG", D, config.AM_START, config.AM_END,
+                            client=_client({"services": [service]}))
+    assert found == []

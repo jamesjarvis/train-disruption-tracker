@@ -23,7 +23,9 @@ from . import config
 from .models import Call, TrainOption
 
 _BUS_MODES = {"BUS", "REPLACEMENT_BUS"}
+_GONE = {"CANCELLED", "DIVERTED"}
 _last_request = 0.0
+requests_made = 0
 
 
 class RttError(RuntimeError):
@@ -48,24 +50,38 @@ def open_client() -> httpx.Client | None:
     return client
 
 
+def _transient(exc: httpx.HTTPError) -> bool:
+    if isinstance(exc, httpx.HTTPStatusError):
+        code = exc.response.status_code
+        return code == 429 or code >= 500
+    return isinstance(exc, httpx.TransportError)
+
+
+def _retry_wait(exc: httpx.HTTPError, attempt: int) -> float:
+    if isinstance(exc, httpx.HTTPStatusError):
+        after = exc.response.headers.get("Retry-After", "")
+        if after.isdigit():
+            return float(after)
+    return config.RETRY_BACKOFF_SECONDS * attempt
+
+
 def _get(client: httpx.Client, path: str, params: dict) -> httpx.Response:
-    global _last_request
-    last_exc: Exception | None = None
+    global _last_request, requests_made
     for attempt in range(1, config.REQUEST_RETRIES + 1):
         wait = config.RTT_REQUEST_DELAY_SECONDS - (_time.monotonic() - _last_request)
         if wait > 0:
             _time.sleep(wait)
         _last_request = _time.monotonic()
+        requests_made += 1
         try:
             resp = client.get(path, params=params)
             resp.raise_for_status()
             return resp
         except httpx.HTTPError as exc:
-            last_exc = exc
-            if attempt < config.REQUEST_RETRIES:
-                _time.sleep(config.RETRY_BACKOFF_SECONDS * attempt)
-    assert last_exc is not None
-    raise last_exc
+            if attempt == config.REQUEST_RETRIES or not _transient(exc):
+                raise
+            _time.sleep(_retry_wait(exc, attempt))
+    raise AssertionError("unreachable")
 
 
 def _local(value: str | None) -> datetime | None:
@@ -112,7 +128,7 @@ def _option(service: dict) -> TrainOption | None:
     booked = _local(dep.get("scheduleAdvertised"))
     if booked is None:
         return None
-    cancelled = bool(dep.get("isCancelled")) or temporal.get("displayAs") == "CANCELLED"
+    cancelled = bool(dep.get("isCancelled")) or temporal.get("displayAs") in _GONE
     actual = _local(dep.get("realtimeActual") or dep.get("realtimeForecast"))
     delay = int((actual - booked).total_seconds() // 60) if actual else None
     bus = (service.get("scheduleMetadata") or {}).get("modeType") in _BUS_MODES
@@ -167,8 +183,9 @@ def search_services(origin: str, dest: str, d: date, start: time, end: time, *,
         booked = _local(((service.get("temporalData") or {}).get("departure") or {})
                         .get("scheduleAdvertised"))
         uid = meta.get("uniqueIdentity")
-        if uid and booked:
-            found[uid] = (uid, date.fromisoformat(meta["departureDate"]), booked)
+        run_date = meta.get("departureDate")
+        if uid and run_date and booked:
+            found[uid] = (uid, date.fromisoformat(run_date), booked)
     return sorted(found.values(), key=lambda s: s[2])
 
 
@@ -180,14 +197,14 @@ def _call(temporal: dict) -> Call:
         actual_dep=_local(dep.get("realtimeActual")),
         booked_arr=_local(arr.get("scheduleAdvertised")),
         actual_arr=_local(arr.get("realtimeActual")),
-        cancelled=temporal.get("displayAs") == "CANCELLED"
-        or bool(arr.get("isCancelled") or dep.get("isCancelled")),
+        cancelled=temporal.get("displayAs") in _GONE,
     )
 
 
 def fetch_service(unique_identity: str, board_crs: str, *,
                   client: httpx.Client) -> tuple[bool, str | None, dict[str, Call]]:
-    resp = _get(client, "/gb-nr/service", {"uniqueIdentity": unique_identity})
+    *_namespace, identity, departure_date = unique_identity.split(":")
+    resp = _get(client, "/gb-nr/service", {"identity": identity, "departureDate": departure_date})
     service = resp.json().get("service") or {}
     calls: dict[str, Call] = {}
     for loc in service.get("locations") or []:
@@ -199,4 +216,6 @@ def fetch_service(unique_identity: str, board_crs: str, *,
     cancelled = board is None or board.cancelled
     reasons = service.get("reasons")
     reason = _reason(reasons, "CANCEL") or _reason(reasons, "DELAY")
+    if (service.get("scheduleMetadata") or {}).get("modeType") in _BUS_MODES:
+        reason = "Rail replacement bus"
     return cancelled, reason, calls

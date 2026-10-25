@@ -31,13 +31,17 @@ def collect(d: date, previous: list[Journey], *, client: httpx.Client | None,
                 if old:
                     result.append(old)
                 continue
-            used += 1
+            before = rtt.requests_made
             try:
                 cancelled, reason, calls = rtt.fetch_service(uid, origin, client=client)
-            except (httpx.HTTPError, ValueError) as exc:
+            except (httpx.HTTPError, ValueError, KeyError) as exc:
                 print(f"WARN {d} [journeys]: {uid}: {exc}", flush=True)
                 if old:
                     result.append(old)
                 continue
+            finally:
+                used += max(1, rtt.requests_made - before)
             result.append(Journey(uid, run_date, window, cancelled, reason, calls))
+    seen = {j.uid for j in result}
+    result += [j for j in previous if j.uid not in seen]
     return result, used

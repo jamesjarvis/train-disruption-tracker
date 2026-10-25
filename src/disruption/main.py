@@ -51,8 +51,8 @@ def _collect_journeys(store: dict[date, DayReport], today: date,
         try:
             trains, used = journeys.collect(d, store[d].trains, client=client,
                                             now=datetime.now(), limit=remaining)
-        except (RttError, httpx.HTTPError) as exc:
-            _log(f"WARN {d} [journeys]: {exc} — keeping stored trains")
+        except (RttError, httpx.HTTPError, ValueError, KeyError) as exc:
+            _log(f"WARN {d} [journeys]: {exc!r} — keeping stored trains")
             continue
         store[d].trains = trains
         remaining -= used

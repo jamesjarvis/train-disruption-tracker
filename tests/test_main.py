@@ -125,3 +125,16 @@ def test_refresh_without_journeys_keeps_stored_trains(_isolate, monkeypatch):
     monkeypatch.setattr(main, "build_day_report", lambda d, **k: _clean(d))
     main.collect_reports(horizon_days=2)
     assert saved[ahead].trains == [_journey(ahead)]
+
+
+def test_unexpected_journey_payload_does_not_lose_the_run(_isolate, monkeypatch):
+    def broken(d, previous, **k):
+        raise KeyError("departureDate")
+
+    saved = {}
+    monkeypatch.setattr(main.journeys, "collect", broken)
+    monkeypatch.setattr(history, "save", lambda store, *a, **k: saved.update(store))
+    monkeypatch.setattr(main, "build_merged_report", lambda d, **k: _clean(d))
+    monkeypatch.setattr(main, "build_day_report", lambda d, **k: _clean(d))
+    main.collect_reports(horizon_days=2)
+    assert date.today() in saved

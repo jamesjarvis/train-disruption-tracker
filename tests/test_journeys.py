@@ -92,3 +92,20 @@ def test_collect_orders_by_window_then_departure(searched, fetched):
     searched["am"] = [("A", D, _dep(7))]
     got, _ = journeys.collect(D, [], client=None, now=NOW, limit=60)
     assert [(j.uid, j.window) for j in got] == [("A", "am"), ("P", "pm"), ("L", "late")]
+
+
+def test_collect_keeps_journeys_missing_from_search(searched, fetched):
+    searched["am"] = [("B", D, _dep(7, 30))]
+    got, _ = journeys.collect(D, [_arrived("A"), _arrived("P", "pm")], client=None, now=NOW, limit=60)
+    assert {j.uid for j in got} == {"A", "B", "P"}
+
+
+def test_collect_counts_retried_requests_against_limit(searched, monkeypatch):
+    def fetch(uid, board, *, client):
+        journeys.rtt.requests_made += 3
+        return False, None, {}
+
+    monkeypatch.setattr(journeys.rtt, "fetch_service", fetch)
+    searched["am"] = [(u, D, _dep(7)) for u in "ABC"]
+    _got, used = journeys.collect(D, [], client=None, now=NOW, limit=4)
+    assert used == 6
