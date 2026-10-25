@@ -37,9 +37,12 @@ itinerary uses a rail-replacement bus.
 
 Two sources feed that:
 
-- `src/disruption/rtt.py` — the Realtime Trains API (`api.rtt.io`). Free JSON, HTTP basic
-  auth, booked vs realtime departure times and cancellation status. Covers yesterday,
-  today and tomorrow, and is the source of the cancelled / late signal.
+- `src/disruption/rtt.py` — the Realtime Trains API (`data.rtt.io`). Free JSON, bearer
+  token, booked vs actual times and cancellation status. Covers yesterday, today and
+  tomorrow, and is the source of the cancelled / late signal. It also fetches each
+  train's calls at Bexley, London Bridge, Cannon Street and Charing Cross, stored as
+  `trains` per day. The free tier allows 10 requests a minute and 100 an hour, so
+  requests are spaced 6.5 s apart and at most 60 trains are looked up per run.
 - `src/disruption/scraper.py` — the National Rail journey planner
   (`ojp.nationalrail.co.uk/service/timesandfares`). Server-rendered HTML, future-dated,
   no signup. Covers tomorrow to 20 days out, and is the source of planned engineering
@@ -91,9 +94,8 @@ python3 -m venv .venv
 ./.venv/bin/python -m pytest        # no network
 ```
 
-Realtime Trains credentials come from `RTT_USERNAME` / `RTT_PASSWORD`, or a git-ignored
-`secrets/rtt.json` (`{"username": "...", "password": "..."}`), which is what the deployed
-job uses. Sign up free at <https://api.rtt.io/>. Without credentials the run still works,
+The Realtime Trains token comes from `RTT_TOKEN`, or a git-ignored `secrets/rtt.json`
+(`{"token": "..."}`). Get one free at <https://api-portal.rtt.io>. Without a token the run still works,
 but only reports planner disruption — no actual cancellations or delays.
 
 ```bash
@@ -149,8 +151,7 @@ Add that public key to the repo's Settings → Deploy keys with *Allow write acc
 write `/etc/train-disruption.env`:
 
 ```
-RTT_USERNAME=...
-RTT_PASSWORD=...
+RTT_TOKEN=...
 ```
 
 Then run the installer, which is idempotent:

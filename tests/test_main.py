@@ -8,9 +8,10 @@ from __future__ import annotations
 
 from datetime import date, timedelta
 
+import httpx
 import pytest
 
-from disruption import config, history, main
+from disruption import history, main, rtt
 from disruption.models import DayReport
 from disruption.rtt import RttError
 from disruption.scraper import ScrapeError
@@ -18,11 +19,10 @@ from disruption.scraper import ScrapeError
 
 @pytest.fixture
 def _isolate(monkeypatch):
-    """No real history I/O, and pretend RTT credentials exist so the merged path runs."""
+    """No real history I/O, and pretend an RTT client exists so the merged path runs."""
     monkeypatch.setattr(history, "load", lambda *a, **k: {})
     monkeypatch.setattr(history, "save", lambda *a, **k: None)
-    monkeypatch.setattr(config, "RTT_USERNAME", "u")
-    monkeypatch.setattr(config, "RTT_PASSWORD", "p")
+    monkeypatch.setattr(rtt, "open_client", httpx.Client)
     monkeypatch.setattr(main, "build_actual_report",
                         lambda d, **k: (_ for _ in ()).throw(RttError("no actual")))
 

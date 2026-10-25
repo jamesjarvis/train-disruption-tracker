@@ -19,7 +19,7 @@ from pathlib import Path
 
 import httpx
 
-from . import config, history, ics_writer
+from . import config, history, ics_writer, rtt
 from .analyze import build_actual_report, build_day_report, build_merged_report
 from .models import DayReport
 from .rtt import RttError
@@ -59,16 +59,9 @@ def collect_reports(horizon_days: int) -> tuple[list[DayReport], date, list[date
         timeout=config.REQUEST_TIMEOUT_SECONDS,
         follow_redirects=True,
     )
-    rtt_client: httpx.Client | None = None
-    if config.RTT_USERNAME and config.RTT_PASSWORD:
-        rtt_client = httpx.Client(
-            auth=(config.RTT_USERNAME, config.RTT_PASSWORD),
-            headers={"User-Agent": config.USER_AGENT},
-            timeout=config.REQUEST_TIMEOUT_SECONDS,
-            follow_redirects=True,
-        )
-    else:
-        _log("WARN RTT_USERNAME/RTT_PASSWORD not set — actual data skipped.")
+    rtt_client = rtt.open_client()
+    if rtt_client is None:
+        _log("WARN RTT_TOKEN not set — actual data skipped.")
 
     try:
         # Actual (Realtime Trains): yesterday only. (Today is merged below; the OJP

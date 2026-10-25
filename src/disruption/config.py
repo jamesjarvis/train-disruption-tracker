@@ -10,6 +10,7 @@ import json
 import os
 from datetime import time
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 # --- Stations (CRS codes) -------------------------------------------------
 # London Bridge is used as the hub: every peak Bexley<->London train calls there,
@@ -56,25 +57,26 @@ REQUEST_RETRIES = 3  # attempts per request before giving up on a window
 RETRY_BACKOFF_SECONDS = 2.0  # linear backoff: attempt N waits N * this
 
 # --- Realtime Trains API (actual running data) ----------------------------
-# Free for personal use; sign up at https://api.rtt.io/ and use the issued
-# username + password (HTTP basic auth). Credentials come from the environment,
-# falling back to secrets/rtt.json ({"username": ..., "password": ...}).
-RTT_BASE = "https://api.rtt.io/api/v1/json"
+RTT_BASE = "https://data.rtt.io"
+RTT_REQUEST_DELAY_SECONDS = 6.5
+RTT_MAX_SERVICE_FETCHES = 60
+JOURNEY_STATIONS = ("BXY", "LBG", "CST", "CHX")
+LATE_START = time(22, 0)
+LATE_END = time(0, 30)
+LONDON = ZoneInfo("Europe/London")
 
 
-def _rtt_credentials() -> tuple[str | None, str | None]:
-    user = os.environ.get("RTT_USERNAME")
-    pwd = os.environ.get("RTT_PASSWORD")
-    if user and pwd:
-        return user, pwd
+def _rtt_token() -> str | None:
+    token = os.environ.get("RTT_TOKEN")
+    if token:
+        return token
     secrets_file = Path(__file__).resolve().parents[2] / "secrets" / "rtt.json"
     if secrets_file.is_file():
-        data = json.loads(secrets_file.read_text())
-        return data.get("username"), data.get("password")
-    return user, pwd
+        return json.loads(secrets_file.read_text()).get("token")
+    return None
 
 
-RTT_USERNAME, RTT_PASSWORD = _rtt_credentials()
+RTT_TOKEN = _rtt_token()
 
 # --- iCalendar output -----------------------------------------------------
 CALENDAR_NAME = "Bexley Trains Disruptions"

@@ -35,8 +35,7 @@ chown "$SVC_USER:$SVC_USER" "$BASE/ssh/known_hosts"
 if [[ ! -f "$ENV_FILE" ]]; then
     echo "Missing $ENV_FILE" >&2
     echo "Create it (root:root, mode 600) containing:" >&2
-    echo "  RTT_USERNAME=..." >&2
-    echo "  RTT_PASSWORD=..." >&2
+    echo "  RTT_TOKEN=..." >&2
     exit 1
 fi
 chown root:root "$ENV_FILE"
