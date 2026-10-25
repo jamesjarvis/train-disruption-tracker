@@ -36,15 +36,3 @@ def test_upsert_overwrites_same_date():
     store = {d: _report(d, disrupted=1)}
     history.upsert(store, _report(d, disrupted=3))
     assert len(store) == 1 and store[d].am_disrupted == 3
-
-
-def test_prune_drops_old_keeps_boundary():
-    today = date(2026, 6, 29)
-    store = {
-        date(2026, 4, 1): _report(date(2026, 4, 1)),   # well older than 60d -> dropped
-        date(2026, 4, 30): _report(date(2026, 4, 30)),  # exactly 60d before -> kept
-        today: _report(today),
-    }
-    history.prune(store, today, keep_days=60)
-    assert date(2026, 4, 1) not in store
-    assert date(2026, 4, 30) in store and today in store

@@ -76,3 +76,15 @@ def test_advance_day_failure_is_not_reported_stale(_isolate, monkeypatch):
     _reports, _today, stale = main.collect_reports(horizon_days=7)
 
     assert stale == []
+
+
+def test_old_days_stay_in_history_but_leave_the_feed(_isolate, monkeypatch):
+    old = date.today() - timedelta(days=400)
+    monkeypatch.setattr(history, "load", lambda *a, **k: {old: DayReport(date=old)})
+    saved = {}
+    monkeypatch.setattr(history, "save", lambda store, *a, **k: saved.update(store))
+    monkeypatch.setattr(main, "build_merged_report", lambda d, **k: _clean(d))
+    monkeypatch.setattr(main, "build_day_report", lambda d, **k: _clean(d))
+    reports, _today, _stale = main.collect_reports(horizon_days=1)
+    assert old in saved
+    assert old not in [r.date for r in reports]

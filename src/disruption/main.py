@@ -3,11 +3,11 @@
 Run every couple of hours via launchd. The feed (docs/disruptions.ics) is published to
 GitHub Pages so family can subscribe by URL — no accounts, no OAuth.
 
-Two sources feed one rolling history:
+Two sources feed one history, kept forever:
   - Realtime Trains (actual) for yesterday/today/tomorrow — real cancellations + delays;
   - the National Rail planner (advance) for tomorrow .. +horizon — engineering works.
-History is kept locally so the feed can show ~2 months of past days alongside the look-
-ahead; the published .ics is the durable public record.
+Every day is kept in the history; the feed shows the last FEED_PAST_DAYS of them
+alongside the look-ahead.
 """
 
 from __future__ import annotations
@@ -40,7 +40,7 @@ def _record(store: dict[date, DayReport], rep: DayReport, label: str) -> None:
 
 
 def collect_reports(horizon_days: int) -> tuple[list[DayReport], date, list[date]]:
-    """Refresh actual + planned days into the history store, prune, and return it.
+    """Refresh actual + planned days into the history store and return it.
 
     Returns (reports_within_window, today, stale_dates). Each day is fetched
     independently; a source failing for one day skips that refresh (the stored value,
@@ -118,10 +118,9 @@ def collect_reports(horizon_days: int) -> tuple[list[DayReport], date, list[date
         if rtt_client is not None:
             rtt_client.close()
 
-    history.prune(store, today, config.HISTORY_KEEP_DAYS)
     history.save(store)
 
-    window_start = today - timedelta(days=config.HISTORY_KEEP_DAYS)
+    window_start = today - timedelta(days=config.FEED_PAST_DAYS)
     window_end = today + timedelta(days=horizon_days)
     reports = [
         store[d] for d in sorted(store) if window_start <= d <= window_end
@@ -146,7 +145,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     _log(f"Scanning {args.horizon + 1} days ahead + up to "
-         f"{config.HISTORY_KEEP_DAYS} days of history")
+         f"{config.FEED_PAST_DAYS} days of history")
     reports, today, stale_dates = collect_reports(args.horizon)
 
     affected = [r for r in reports if r.affected]

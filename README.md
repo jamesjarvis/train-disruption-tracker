@@ -45,8 +45,9 @@ Two sources feed that:
   no signup. Covers tomorrow to 20 days out, and is the source of planned engineering
   works and replacement buses.
 
-The feed keeps a rolling 60 days of past days alongside the look-ahead, so it also serves
-as a record of how the line actually ran. Past days carry no alarm; future days alarm at
+Every day is kept forever in `state/history.json`, which the deployed job also publishes
+next to the feed as `history.json`. The feed itself shows the last 60 days
+(`FEED_PAST_DAYS`) alongside the look-ahead. Past days carry no alarm; future days alarm at
 20:00 the evening before.
 
 ## How it works
@@ -56,7 +57,7 @@ main.py → history.load()
         → analyze.build_actual_report(D-1..D)   via rtt.fetch_trains      (actual)
         → analyze.build_merged_report(D+1)       rtt + scraper, merged     (both)
         → analyze.build_day_report(D+2..+20)     via scraper.fetch_trains  (planned)
-        → history.upsert / prune (keep 60 days) / save
+        → history.upsert / save (every day, forever)
         → ics_writer.write_calendar(reports)     rebuilt from scratch each run
 ```
 
@@ -121,7 +122,7 @@ or not a Mac is awake. Everything it needs is under `/srv/disruption`.
 | Path | What it is |
 |---|---|
 | `/srv/disruption/repo` | Shallow clone of this repo, branch `main` |
-| `/srv/disruption/repo/state/history.json` | Rolling 60-day history. Not in git |
+| `/srv/disruption/repo/state/history.json` | Every recorded day. Not in git |
 | `/srv/disruption/ssh/id_ed25519` | GitHub deploy key for this repo only. `pi:pi`, mode 600 |
 | `/srv/disruption/.gitconfig` | Commit identity for the automated pushes |
 | `/etc/train-disruption.env` | Realtime Trains credentials. `root:root`, mode 600 |
@@ -163,7 +164,7 @@ It clones to `/srv/disruption/repo`, builds the venv, installs both units and en
 timer. After that the repo is self-hosting:
 `sudo /srv/disruption/repo/deploy/install-pi.sh`.
 
-Seed the history by copying `state/history.json` onto the Pi; without it the rolling
+Seed the history by copying `state/history.json` onto the Pi; without it the history
 window rebuilds from the published `.ics` plus new runs.
 
 ```bash

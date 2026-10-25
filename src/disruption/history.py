@@ -1,4 +1,4 @@
-"""Persist computed day reports so the feed can keep ~2 months of history.
+"""Persist every computed day report, forever.
 
 The .ics is rebuilt from scratch each run and Realtime Trains only serves recent dates,
 so past days must be remembered between runs. This is a tiny JSON store keyed by ISO
@@ -8,7 +8,7 @@ date, kept locally (git-ignored). The published .ics remains the durable public 
 from __future__ import annotations
 
 import json
-from datetime import date, datetime, timedelta
+from datetime import date, datetime
 from pathlib import Path
 
 from . import config
@@ -77,10 +77,3 @@ def save(store: dict[date, DayReport], path: Path | None = None) -> None:
 def upsert(store: dict[date, DayReport], report: DayReport) -> None:
     """Insert or overwrite the report for its date."""
     store[report.date] = report
-
-
-def prune(store: dict[date, DayReport], today: date, keep_days: int) -> None:
-    """Drop days older than ``today - keep_days`` (in place)."""
-    cutoff = today - timedelta(days=keep_days)
-    for d in [d for d in store if d < cutoff]:
-        del store[d]

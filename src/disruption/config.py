@@ -42,10 +42,7 @@ LIVE_FWD_DAYS = 1
 DELAY_THRESHOLD_MINUTES = 5
 
 # --- History store --------------------------------------------------------
-# The .ics is rebuilt from scratch each run, so past days must be remembered to
-# keep ~2 months of history in the feed. Stored locally (git-ignored); the
-# published .ics is the durable public record.
-HISTORY_KEEP_DAYS = 60
+FEED_PAST_DAYS = 60
 
 # --- Scraper politeness ----------------------------------------------------
 OJP_BASE = "https://ojp.nationalrail.co.uk/service/timesandfares"
