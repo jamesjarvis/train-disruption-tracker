@@ -12,7 +12,7 @@ from datetime import date, datetime
 from pathlib import Path
 
 from . import config
-from .models import DayReport, TrainOption
+from .models import Call, DayReport, Journey, TrainOption
 
 
 def _train_to_dict(t: TrainOption) -> dict:
@@ -35,6 +35,56 @@ def _train_from_dict(d: dict) -> TrainOption:
     )
 
 
+def _time_to_str(t: datetime | None) -> str | None:
+    return t.isoformat(timespec="minutes") if t else None
+
+
+def _time_from_str(s: str | None) -> datetime | None:
+    return datetime.fromisoformat(s) if s else None
+
+
+def _call_to_dict(c: Call) -> dict:
+    return {
+        "booked_dep": _time_to_str(c.booked_dep),
+        "actual_dep": _time_to_str(c.actual_dep),
+        "booked_arr": _time_to_str(c.booked_arr),
+        "actual_arr": _time_to_str(c.actual_arr),
+        "cancelled": c.cancelled,
+    }
+
+
+def _call_from_dict(d: dict) -> Call:
+    return Call(
+        booked_dep=_time_from_str(d.get("booked_dep")),
+        actual_dep=_time_from_str(d.get("actual_dep")),
+        booked_arr=_time_from_str(d.get("booked_arr")),
+        actual_arr=_time_from_str(d.get("actual_arr")),
+        cancelled=d.get("cancelled", False),
+    )
+
+
+def journey_to_dict(j: Journey) -> dict:
+    return {
+        "uid": j.uid,
+        "run_date": j.run_date.isoformat(),
+        "window": j.window,
+        "cancelled": j.cancelled,
+        "reason": j.reason,
+        "calls": {crs: _call_to_dict(c) for crs, c in j.calls.items()},
+    }
+
+
+def journey_from_dict(d: dict) -> Journey:
+    return Journey(
+        uid=d["uid"],
+        run_date=date.fromisoformat(d["run_date"]),
+        window=d["window"],
+        cancelled=d["cancelled"],
+        reason=d.get("reason"),
+        calls={crs: _call_from_dict(c) for crs, c in d["calls"].items()},
+    )
+
+
 def report_to_dict(r: DayReport) -> dict:
     return {
         "date": r.date.isoformat(),
@@ -44,6 +94,7 @@ def report_to_dict(r: DayReport) -> dict:
         "pm_disrupted": r.pm_disrupted,
         "am_disrupted_trains": [_train_to_dict(t) for t in r.am_disrupted_trains],
         "pm_disrupted_trains": [_train_to_dict(t) for t in r.pm_disrupted_trains],
+        "trains": [journey_to_dict(j) for j in r.trains],
     }
 
 
@@ -56,6 +107,7 @@ def report_from_dict(d: dict) -> DayReport:
         pm_disrupted=d["pm_disrupted"],
         am_disrupted_trains=[_train_from_dict(t) for t in d["am_disrupted_trains"]],
         pm_disrupted_trains=[_train_from_dict(t) for t in d["pm_disrupted_trains"]],
+        trains=[journey_from_dict(j) for j in d.get("trains", [])],
     )
 
 
