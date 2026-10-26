@@ -5690,6 +5690,516 @@
             "cancelled": false
           }
         }
+      },
+      {
+        "uid": "gb-nr:P88702:2026-10-25",
+        "run_date": "2026-10-25",
+        "window": "pm",
+        "cancelled": false,
+        "reason": null,
+        "calls": {
+          "CHX": {
+            "booked_dep": "2026-10-25T19:06",
+            "actual_dep": "2026-10-25T19:06",
+            "booked_arr": null,
+            "actual_arr": null,
+            "cancelled": false
+          },
+          "LBG": {
+            "booked_dep": "2026-10-25T19:15",
+            "actual_dep": "2026-10-25T19:15",
+            "booked_arr": "2026-10-25T19:13",
+            "actual_arr": "2026-10-25T19:13",
+            "cancelled": false
+          },
+          "BXY": {
+            "booked_dep": "2026-10-25T19:48",
+            "actual_dep": "2026-10-25T19:50",
+            "booked_arr": "2026-10-25T19:48",
+            "actual_arr": "2026-10-25T19:49",
+            "cancelled": false
+          }
+        }
+      },
+      {
+        "uid": "gb-nr:P86031:2026-10-25",
+        "run_date": "2026-10-25",
+        "window": "pm",
+        "cancelled": false,
+        "reason": null,
+        "calls": {
+          "CHX": {
+            "booked_dep": "2026-10-25T19:20",
+            "actual_dep": "2026-10-25T19:20",
+            "booked_arr": null,
+            "actual_arr": null,
+            "cancelled": false
+          },
+          "LBG": {
+            "booked_dep": "2026-10-25T19:29",
+            "actual_dep": "2026-10-25T19:29",
+            "booked_arr": "2026-10-25T19:27",
+            "actual_arr": "2026-10-25T19:27",
+            "cancelled": false
+          },
+          "BXY": {
+            "booked_dep": "2026-10-25T19:59",
+            "actual_dep": "2026-10-25T19:59",
+            "booked_arr": "2026-10-25T19:58",
+            "actual_arr": "2026-10-25T19:58",
+            "cancelled": false
+          }
+        }
+      },
+      {
+        "uid": "gb-nr:P88711:2026-10-25",
+        "run_date": "2026-10-25",
+        "window": "pm",
+        "cancelled": false,
+        "reason": null,
+        "calls": {
+          "CHX": {
+            "booked_dep": "2026-10-25T19:36",
+            "actual_dep": "2026-10-25T19:36",
+            "booked_arr": null,
+            "actual_arr": null,
+            "cancelled": false
+          },
+          "LBG": {
+            "booked_dep": "2026-10-25T19:45",
+            "actual_dep": "2026-10-25T19:45",
+            "booked_arr": "2026-10-25T19:43",
+            "actual_arr": "2026-10-25T19:42",
+            "cancelled": false
+          },
+          "BXY": {
+            "booked_dep": "2026-10-25T20:18",
+            "actual_dep": "2026-10-25T20:21",
+            "booked_arr": "2026-10-25T20:17",
+            "actual_arr": "2026-10-25T20:20",
+            "cancelled": false
+          }
+        }
+      },
+      {
+        "uid": "gb-nr:P86037:2026-10-25",
+        "run_date": "2026-10-25",
+        "window": "pm",
+        "cancelled": false,
+        "reason": null,
+        "calls": {
+          "CHX": {
+            "booked_dep": "2026-10-25T19:50",
+            "actual_dep": "2026-10-25T19:49",
+            "booked_arr": null,
+            "actual_arr": null,
+            "cancelled": false
+          },
+          "LBG": {
+            "booked_dep": "2026-10-25T19:59",
+            "actual_dep": "2026-10-25T19:59",
+            "booked_arr": "2026-10-25T19:57",
+            "actual_arr": "2026-10-25T19:57",
+            "cancelled": false
+          },
+          "BXY": {
+            "booked_dep": "2026-10-25T20:29",
+            "actual_dep": "2026-10-25T20:31",
+            "booked_arr": "2026-10-25T20:28",
+            "actual_arr": "2026-10-25T20:31",
+            "cancelled": false
+          }
+        }
+      },
+      {
+        "uid": "gb-nr:P88720:2026-10-25",
+        "run_date": "2026-10-25",
+        "window": "pm",
+        "cancelled": false,
+        "reason": null,
+        "calls": {
+          "CHX": {
+            "booked_dep": "2026-10-25T20:06",
+            "actual_dep": "2026-10-25T20:06",
+            "booked_arr": null,
+            "actual_arr": null,
+            "cancelled": false
+          },
+          "LBG": {
+            "booked_dep": "2026-10-25T20:15",
+            "actual_dep": "2026-10-25T20:15",
+            "booked_arr": "2026-10-25T20:13",
+            "actual_arr": "2026-10-25T20:12",
+            "cancelled": false
+          },
+          "BXY": {
+            "booked_dep": "2026-10-25T20:48",
+            "actual_dep": "2026-10-25T20:48",
+            "booked_arr": "2026-10-25T20:47",
+            "actual_arr": "2026-10-25T20:47",
+            "cancelled": false
+          }
+        }
+      },
+      {
+        "uid": "gb-nr:P86044:2026-10-25",
+        "run_date": "2026-10-25",
+        "window": "pm",
+        "cancelled": false,
+        "reason": null,
+        "calls": {
+          "CHX": {
+            "booked_dep": "2026-10-25T20:20",
+            "actual_dep": "2026-10-25T20:20",
+            "booked_arr": null,
+            "actual_arr": null,
+            "cancelled": false
+          },
+          "LBG": {
+            "booked_dep": "2026-10-25T20:29",
+            "actual_dep": "2026-10-25T20:29",
+            "booked_arr": "2026-10-25T20:27",
+            "actual_arr": "2026-10-25T20:27",
+            "cancelled": false
+          },
+          "BXY": {
+            "booked_dep": "2026-10-25T20:59",
+            "actual_dep": "2026-10-25T20:59",
+            "booked_arr": "2026-10-25T20:58",
+            "actual_arr": "2026-10-25T20:58",
+            "cancelled": false
+          }
+        }
+      },
+      {
+        "uid": "gb-nr:P88729:2026-10-25",
+        "run_date": "2026-10-25",
+        "window": "pm",
+        "cancelled": false,
+        "reason": null,
+        "calls": {
+          "CHX": {
+            "booked_dep": "2026-10-25T20:36",
+            "actual_dep": "2026-10-25T20:36",
+            "booked_arr": null,
+            "actual_arr": null,
+            "cancelled": false
+          },
+          "LBG": {
+            "booked_dep": "2026-10-25T20:45",
+            "actual_dep": "2026-10-25T20:46",
+            "booked_arr": "2026-10-25T20:43",
+            "actual_arr": "2026-10-25T20:44",
+            "cancelled": false
+          },
+          "BXY": {
+            "booked_dep": "2026-10-25T21:18",
+            "actual_dep": "2026-10-25T21:19",
+            "booked_arr": "2026-10-25T21:17",
+            "actual_arr": "2026-10-25T21:18",
+            "cancelled": false
+          }
+        }
+      },
+      {
+        "uid": "gb-nr:P86050:2026-10-25",
+        "run_date": "2026-10-25",
+        "window": "pm",
+        "cancelled": false,
+        "reason": null,
+        "calls": {
+          "CHX": {
+            "booked_dep": "2026-10-25T20:50",
+            "actual_dep": "2026-10-25T20:49",
+            "booked_arr": null,
+            "actual_arr": null,
+            "cancelled": false
+          },
+          "LBG": {
+            "booked_dep": "2026-10-25T20:59",
+            "actual_dep": "2026-10-25T20:58",
+            "booked_arr": "2026-10-25T20:57",
+            "actual_arr": "2026-10-25T20:56",
+            "cancelled": false
+          },
+          "BXY": {
+            "booked_dep": "2026-10-25T21:29",
+            "actual_dep": "2026-10-25T21:28",
+            "booked_arr": "2026-10-25T21:28",
+            "actual_arr": "2026-10-25T21:27",
+            "cancelled": false
+          }
+        }
+      },
+      {
+        "uid": "gb-nr:P88738:2026-10-25",
+        "run_date": "2026-10-25",
+        "window": "pm",
+        "cancelled": false,
+        "reason": null,
+        "calls": {
+          "CHX": {
+            "booked_dep": "2026-10-25T21:06",
+            "actual_dep": "2026-10-25T21:06",
+            "booked_arr": null,
+            "actual_arr": null,
+            "cancelled": false
+          },
+          "LBG": {
+            "booked_dep": "2026-10-25T21:15",
+            "actual_dep": "2026-10-25T21:15",
+            "booked_arr": "2026-10-25T21:13",
+            "actual_arr": "2026-10-25T21:13",
+            "cancelled": false
+          },
+          "BXY": {
+            "booked_dep": "2026-10-25T21:48",
+            "actual_dep": "2026-10-25T21:49",
+            "booked_arr": "2026-10-25T21:47",
+            "actual_arr": "2026-10-25T21:48",
+            "cancelled": false
+          }
+        }
+      },
+      {
+        "uid": "gb-nr:P86056:2026-10-25",
+        "run_date": "2026-10-25",
+        "window": "pm",
+        "cancelled": false,
+        "reason": null,
+        "calls": {
+          "CHX": {
+            "booked_dep": "2026-10-25T21:20",
+            "actual_dep": "2026-10-25T21:20",
+            "booked_arr": null,
+            "actual_arr": null,
+            "cancelled": false
+          },
+          "LBG": {
+            "booked_dep": "2026-10-25T21:29",
+            "actual_dep": "2026-10-25T21:29",
+            "booked_arr": "2026-10-25T21:27",
+            "actual_arr": "2026-10-25T21:28",
+            "cancelled": false
+          },
+          "BXY": {
+            "booked_dep": "2026-10-25T21:59",
+            "actual_dep": "2026-10-25T21:59",
+            "booked_arr": "2026-10-25T21:58",
+            "actual_arr": "2026-10-25T21:58",
+            "cancelled": false
+          }
+        }
+      },
+      {
+        "uid": "gb-nr:P88748:2026-10-25",
+        "run_date": "2026-10-25",
+        "window": "pm",
+        "cancelled": false,
+        "reason": null,
+        "calls": {
+          "CHX": {
+            "booked_dep": "2026-10-25T21:36",
+            "actual_dep": "2026-10-25T21:36",
+            "booked_arr": null,
+            "actual_arr": null,
+            "cancelled": false
+          },
+          "LBG": {
+            "booked_dep": "2026-10-25T21:45",
+            "actual_dep": "2026-10-25T21:45",
+            "booked_arr": "2026-10-25T21:43",
+            "actual_arr": "2026-10-25T21:44",
+            "cancelled": false
+          },
+          "BXY": {
+            "booked_dep": "2026-10-25T22:18",
+            "actual_dep": "2026-10-25T22:18",
+            "booked_arr": "2026-10-25T22:17",
+            "actual_arr": "2026-10-25T22:16",
+            "cancelled": false
+          }
+        }
+      },
+      {
+        "uid": "gb-nr:P86062:2026-10-25",
+        "run_date": "2026-10-25",
+        "window": "pm",
+        "cancelled": false,
+        "reason": null,
+        "calls": {
+          "CHX": {
+            "booked_dep": "2026-10-25T21:50",
+            "actual_dep": "2026-10-25T21:49",
+            "booked_arr": null,
+            "actual_arr": null,
+            "cancelled": false
+          },
+          "LBG": {
+            "booked_dep": "2026-10-25T21:59",
+            "actual_dep": "2026-10-25T21:58",
+            "booked_arr": "2026-10-25T21:57",
+            "actual_arr": "2026-10-25T21:56",
+            "cancelled": false
+          },
+          "BXY": {
+            "booked_dep": "2026-10-25T22:29",
+            "actual_dep": "2026-10-25T22:29",
+            "booked_arr": "2026-10-25T22:28",
+            "actual_arr": "2026-10-25T22:28",
+            "cancelled": false
+          }
+        }
+      },
+      {
+        "uid": "gb-nr:P88758:2026-10-25",
+        "run_date": "2026-10-25",
+        "window": "late",
+        "cancelled": false,
+        "reason": null,
+        "calls": {
+          "CHX": {
+            "booked_dep": "2026-10-25T22:06",
+            "actual_dep": "2026-10-25T22:13",
+            "booked_arr": null,
+            "actual_arr": null,
+            "cancelled": false
+          },
+          "LBG": {
+            "booked_dep": "2026-10-25T22:15",
+            "actual_dep": "2026-10-25T22:22",
+            "booked_arr": "2026-10-25T22:13",
+            "actual_arr": "2026-10-25T22:21",
+            "cancelled": false
+          },
+          "BXY": {
+            "booked_dep": "2026-10-25T22:48",
+            "actual_dep": "2026-10-25T22:55",
+            "booked_arr": "2026-10-25T22:47",
+            "actual_arr": "2026-10-25T22:54",
+            "cancelled": false
+          }
+        }
+      },
+      {
+        "uid": "gb-nr:P88763:2026-10-25",
+        "run_date": "2026-10-25",
+        "window": "late",
+        "cancelled": false,
+        "reason": null,
+        "calls": {
+          "CHX": {
+            "booked_dep": "2026-10-25T22:20",
+            "actual_dep": "2026-10-25T22:19",
+            "booked_arr": null,
+            "actual_arr": null,
+            "cancelled": false
+          },
+          "LBG": {
+            "booked_dep": "2026-10-25T22:29",
+            "actual_dep": "2026-10-25T22:29",
+            "booked_arr": "2026-10-25T22:27",
+            "actual_arr": "2026-10-25T22:27",
+            "cancelled": false
+          },
+          "BXY": {
+            "booked_dep": "2026-10-25T23:00",
+            "actual_dep": "2026-10-25T23:04",
+            "booked_arr": "2026-10-25T22:59",
+            "actual_arr": "2026-10-25T23:03",
+            "cancelled": false
+          }
+        }
+      },
+      {
+        "uid": "gb-nr:P88775:2026-10-25",
+        "run_date": "2026-10-25",
+        "window": "late",
+        "cancelled": false,
+        "reason": null,
+        "calls": {
+          "CHX": {
+            "booked_dep": "2026-10-25T22:50",
+            "actual_dep": "2026-10-25T22:50",
+            "booked_arr": null,
+            "actual_arr": null,
+            "cancelled": false
+          },
+          "LBG": {
+            "booked_dep": "2026-10-25T22:59",
+            "actual_dep": "2026-10-25T22:59",
+            "booked_arr": "2026-10-25T22:57",
+            "actual_arr": "2026-10-25T22:57",
+            "cancelled": false
+          },
+          "BXY": {
+            "booked_dep": "2026-10-25T23:30",
+            "actual_dep": "2026-10-25T23:30",
+            "booked_arr": "2026-10-25T23:29",
+            "actual_arr": "2026-10-25T23:29",
+            "cancelled": false
+          }
+        }
+      },
+      {
+        "uid": "gb-nr:P88786:2026-10-25",
+        "run_date": "2026-10-25",
+        "window": "late",
+        "cancelled": false,
+        "reason": null,
+        "calls": {
+          "CHX": {
+            "booked_dep": "2026-10-25T23:20",
+            "actual_dep": "2026-10-25T23:19",
+            "booked_arr": null,
+            "actual_arr": null,
+            "cancelled": false
+          },
+          "LBG": {
+            "booked_dep": "2026-10-25T23:29",
+            "actual_dep": "2026-10-25T23:29",
+            "booked_arr": "2026-10-25T23:27",
+            "actual_arr": "2026-10-25T23:26",
+            "cancelled": false
+          },
+          "BXY": {
+            "booked_dep": "2026-10-25T23:59",
+            "actual_dep": "2026-10-26T00:00",
+            "booked_arr": "2026-10-25T23:59",
+            "actual_arr": "2026-10-25T23:59",
+            "cancelled": false
+          }
+        }
+      },
+      {
+        "uid": "gb-nr:P88802:2026-10-26",
+        "run_date": "2026-10-26",
+        "window": "late",
+        "cancelled": false,
+        "reason": null,
+        "calls": {
+          "CHX": {
+            "booked_dep": "2026-10-26T00:06",
+            "actual_dep": "2026-10-26T00:05",
+            "booked_arr": null,
+            "actual_arr": null,
+            "cancelled": false
+          },
+          "LBG": {
+            "booked_dep": "2026-10-26T00:15",
+            "actual_dep": "2026-10-26T00:15",
+            "booked_arr": "2026-10-26T00:13",
+            "actual_arr": "2026-10-26T00:13",
+            "cancelled": false
+          },
+          "BXY": {
+            "booked_dep": "2026-10-26T00:47",
+            "actual_dep": "2026-10-26T00:47",
+            "booked_arr": "2026-10-26T00:47",
+            "actual_arr": "2026-10-26T00:46",
+            "cancelled": false
+          }
+        }
       }
     ]
   },
@@ -5705,9 +6215,9 @@
   },
   "2026-10-27": {
     "date": "2026-10-27",
-    "am_total": 21,
+    "am_total": 23,
     "am_disrupted": 0,
-    "pm_total": 26,
+    "pm_total": 31,
     "pm_disrupted": 0,
     "am_disrupted_trains": [],
     "pm_disrupted_trains": [],
@@ -5891,6 +6401,130 @@
     "pm_disrupted": 0,
     "am_disrupted_trains": [],
     "pm_disrupted_trains": [],
+    "trains": []
+  },
+  "2026-11-15": {
+    "date": "2026-11-15",
+    "am_total": 6,
+    "am_disrupted": 6,
+    "pm_total": 10,
+    "pm_disrupted": 10,
+    "am_disrupted_trains": [
+      {
+        "departure": "2026-11-15T07:12:00",
+        "disrupted": true,
+        "reason": "Rail replacement bus",
+        "cancelled": false,
+        "delay_minutes": null
+      },
+      {
+        "departure": "2026-11-15T07:42:00",
+        "disrupted": true,
+        "reason": "Rail replacement bus",
+        "cancelled": false,
+        "delay_minutes": null
+      },
+      {
+        "departure": "2026-11-15T08:12:00",
+        "disrupted": true,
+        "reason": "Rail replacement bus",
+        "cancelled": false,
+        "delay_minutes": null
+      },
+      {
+        "departure": "2026-11-15T08:42:00",
+        "disrupted": true,
+        "reason": "Rail replacement bus",
+        "cancelled": false,
+        "delay_minutes": null
+      },
+      {
+        "departure": "2026-11-15T09:12:00",
+        "disrupted": true,
+        "reason": "Rail replacement bus",
+        "cancelled": false,
+        "delay_minutes": null
+      },
+      {
+        "departure": "2026-11-15T09:42:00",
+        "disrupted": true,
+        "reason": "Rail replacement bus",
+        "cancelled": false,
+        "delay_minutes": null
+      }
+    ],
+    "pm_disrupted_trains": [
+      {
+        "departure": "2026-11-15T17:05:00",
+        "disrupted": true,
+        "reason": "Rail replacement bus",
+        "cancelled": false,
+        "delay_minutes": null
+      },
+      {
+        "departure": "2026-11-15T17:35:00",
+        "disrupted": true,
+        "reason": "Rail replacement bus",
+        "cancelled": false,
+        "delay_minutes": null
+      },
+      {
+        "departure": "2026-11-15T18:05:00",
+        "disrupted": true,
+        "reason": "Rail replacement bus",
+        "cancelled": false,
+        "delay_minutes": null
+      },
+      {
+        "departure": "2026-11-15T18:35:00",
+        "disrupted": true,
+        "reason": "Rail replacement bus",
+        "cancelled": false,
+        "delay_minutes": null
+      },
+      {
+        "departure": "2026-11-15T19:05:00",
+        "disrupted": true,
+        "reason": "Rail replacement bus",
+        "cancelled": false,
+        "delay_minutes": null
+      },
+      {
+        "departure": "2026-11-15T19:35:00",
+        "disrupted": true,
+        "reason": "Rail replacement bus",
+        "cancelled": false,
+        "delay_minutes": null
+      },
+      {
+        "departure": "2026-11-15T20:05:00",
+        "disrupted": true,
+        "reason": "Rail replacement bus",
+        "cancelled": false,
+        "delay_minutes": null
+      },
+      {
+        "departure": "2026-11-15T20:35:00",
+        "disrupted": true,
+        "reason": "Rail replacement bus",
+        "cancelled": false,
+        "delay_minutes": null
+      },
+      {
+        "departure": "2026-11-15T21:05:00",
+        "disrupted": true,
+        "reason": "Rail replacement bus",
+        "cancelled": false,
+        "delay_minutes": null
+      },
+      {
+        "departure": "2026-11-15T21:35:00",
+        "disrupted": true,
+        "reason": "Rail replacement bus",
+        "cancelled": false,
+        "delay_minutes": null
+      }
+    ],
     "trains": []
   }
 }
