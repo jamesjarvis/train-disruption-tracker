@@ -6205,13 +6205,87 @@
   },
   "2026-10-26": {
     "date": "2026-10-26",
-    "am_total": 23,
-    "am_disrupted": 0,
+    "am_total": 24,
+    "am_disrupted": 6,
     "pm_total": 31,
     "pm_disrupted": 0,
-    "am_disrupted_trains": [],
+    "am_disrupted_trains": [
+      {
+        "departure": "2026-10-26T06:58:00",
+        "disrupted": true,
+        "reason": "Delayed 12 min",
+        "cancelled": false,
+        "delay_minutes": 12
+      },
+      {
+        "departure": "2026-10-26T07:07:00",
+        "disrupted": true,
+        "reason": "Cancelled",
+        "cancelled": true,
+        "delay_minutes": 7
+      },
+      {
+        "departure": "2026-10-26T07:12:00",
+        "disrupted": true,
+        "reason": "Delayed 9 min",
+        "cancelled": false,
+        "delay_minutes": 9
+      },
+      {
+        "departure": "2026-10-26T07:28:00",
+        "disrupted": true,
+        "reason": "Delayed 6 min",
+        "cancelled": false,
+        "delay_minutes": 6
+      },
+      {
+        "departure": "2026-10-26T07:58:00",
+        "disrupted": true,
+        "reason": "Delayed 10 min",
+        "cancelled": false,
+        "delay_minutes": 10
+      },
+      {
+        "departure": "2026-10-26T08:37:00",
+        "disrupted": true,
+        "reason": "Delayed 15 min",
+        "cancelled": false,
+        "delay_minutes": 15
+      }
+    ],
     "pm_disrupted_trains": [],
-    "trains": []
+    "trains": [
+      {
+        "uid": "gb-nr:P85219:2026-10-26",
+        "run_date": "2026-10-26",
+        "window": "am",
+        "cancelled": false,
+        "reason": null,
+        "calls": {
+          "BXY": {
+            "booked_dep": "2026-10-26T06:58",
+            "actual_dep": "2026-10-26T07:10",
+            "booked_arr": "2026-10-26T06:57",
+            "actual_arr": "2026-10-26T07:10",
+            "cancelled": false
+          },
+          "LBG": {
+            "booked_dep": "2026-10-26T07:27",
+            "actual_dep": "2026-10-26T07:38",
+            "booked_arr": "2026-10-26T07:25",
+            "actual_arr": "2026-10-26T07:37",
+            "cancelled": false
+          },
+          "CHX": {
+            "booked_dep": null,
+            "actual_dep": null,
+            "booked_arr": "2026-10-26T07:35",
+            "actual_arr": "2026-10-26T07:47",
+            "cancelled": false
+          }
+        }
+      }
+    ]
   },
   "2026-10-27": {
     "date": "2026-10-27",
