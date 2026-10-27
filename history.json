@@ -9024,6 +9024,36 @@
             "cancelled": false
           }
         }
+      },
+      {
+        "uid": "gb-nr:P88840:2026-10-27",
+        "run_date": "2026-10-27",
+        "window": "pm",
+        "cancelled": false,
+        "reason": null,
+        "calls": {
+          "CST": {
+            "booked_dep": "2026-10-27T17:02",
+            "actual_dep": "2026-10-27T17:02",
+            "booked_arr": null,
+            "actual_arr": null,
+            "cancelled": false
+          },
+          "LBG": {
+            "booked_dep": "2026-10-27T17:07",
+            "actual_dep": "2026-10-27T17:07",
+            "booked_arr": "2026-10-27T17:05",
+            "actual_arr": "2026-10-27T17:05",
+            "cancelled": false
+          },
+          "BXY": {
+            "booked_dep": "2026-10-27T18:04",
+            "actual_dep": "2026-10-27T18:05",
+            "booked_arr": "2026-10-27T18:04",
+            "actual_arr": "2026-10-27T18:05",
+            "cancelled": false
+          }
+        }
       }
     ]
   },
