@@ -8844,6 +8844,186 @@
             "cancelled": false
           }
         }
+      },
+      {
+        "uid": "gb-nr:P87712:2026-10-27",
+        "run_date": "2026-10-27",
+        "window": "am",
+        "cancelled": false,
+        "reason": null,
+        "calls": {
+          "CST": {
+            "booked_dep": "2026-10-27T08:36",
+            "actual_dep": "2026-10-27T08:36",
+            "booked_arr": null,
+            "actual_arr": null,
+            "cancelled": false
+          },
+          "LBG": {
+            "booked_dep": "2026-10-27T08:40",
+            "actual_dep": "2026-10-27T08:40",
+            "booked_arr": "2026-10-27T08:39",
+            "actual_arr": "2026-10-27T08:40",
+            "cancelled": false
+          },
+          "BXY": {
+            "booked_dep": "2026-10-27T09:12",
+            "actual_dep": "2026-10-27T09:12",
+            "booked_arr": "2026-10-27T09:11",
+            "actual_arr": "2026-10-27T09:11",
+            "cancelled": false
+          }
+        }
+      },
+      {
+        "uid": "gb-nr:P87086:2026-10-27",
+        "run_date": "2026-10-27",
+        "window": "am",
+        "cancelled": false,
+        "reason": null,
+        "calls": {
+          "BXY": {
+            "booked_dep": "2026-10-27T09:12",
+            "actual_dep": "2026-10-27T09:14",
+            "booked_arr": "2026-10-27T09:12",
+            "actual_arr": "2026-10-27T09:14",
+            "cancelled": false
+          },
+          "LBG": {
+            "booked_dep": "2026-10-27T09:45",
+            "actual_dep": "2026-10-27T09:48",
+            "booked_arr": "2026-10-27T09:44",
+            "actual_arr": "2026-10-27T09:47",
+            "cancelled": false
+          },
+          "CHX": {
+            "booked_dep": null,
+            "actual_dep": null,
+            "booked_arr": "2026-10-27T09:54",
+            "actual_arr": "2026-10-27T09:55",
+            "cancelled": false
+          }
+        }
+      },
+      {
+        "uid": "gb-nr:P85249:2026-10-27",
+        "run_date": "2026-10-27",
+        "window": "am",
+        "cancelled": false,
+        "reason": null,
+        "calls": {
+          "BXY": {
+            "booked_dep": "2026-10-27T09:27",
+            "actual_dep": "2026-10-27T09:28",
+            "booked_arr": "2026-10-27T09:27",
+            "actual_arr": "2026-10-27T09:27",
+            "cancelled": false
+          },
+          "LBG": {
+            "booked_dep": "2026-10-27T09:57",
+            "actual_dep": "2026-10-27T09:57",
+            "booked_arr": "2026-10-27T09:55",
+            "actual_arr": "2026-10-27T09:56",
+            "cancelled": false
+          },
+          "CHX": {
+            "booked_dep": null,
+            "actual_dep": null,
+            "booked_arr": "2026-10-27T10:05",
+            "actual_arr": "2026-10-27T10:05",
+            "cancelled": false
+          }
+        }
+      },
+      {
+        "uid": "gb-nr:P88848:2026-10-27",
+        "run_date": "2026-10-27",
+        "window": "am",
+        "cancelled": false,
+        "reason": null,
+        "calls": {
+          "CST": {
+            "booked_dep": "2026-10-27T08:32",
+            "actual_dep": "2026-10-27T08:31",
+            "booked_arr": null,
+            "actual_arr": null,
+            "cancelled": false
+          },
+          "LBG": {
+            "booked_dep": "2026-10-27T08:37",
+            "actual_dep": "2026-10-27T08:37",
+            "booked_arr": "2026-10-27T08:36",
+            "actual_arr": "2026-10-27T08:35",
+            "cancelled": false
+          },
+          "BXY": {
+            "booked_dep": "2026-10-27T09:37",
+            "actual_dep": "2026-10-27T09:37",
+            "booked_arr": "2026-10-27T09:37",
+            "actual_arr": "2026-10-27T09:36",
+            "cancelled": false
+          }
+        }
+      },
+      {
+        "uid": "gb-nr:P87114:2026-10-27",
+        "run_date": "2026-10-27",
+        "window": "am",
+        "cancelled": false,
+        "reason": null,
+        "calls": {
+          "BXY": {
+            "booked_dep": "2026-10-27T09:42",
+            "actual_dep": "2026-10-27T09:42",
+            "booked_arr": "2026-10-27T09:42",
+            "actual_arr": "2026-10-27T09:42",
+            "cancelled": false
+          },
+          "LBG": {
+            "booked_dep": "2026-10-27T10:17",
+            "actual_dep": "2026-10-27T10:17",
+            "booked_arr": "2026-10-27T10:15",
+            "actual_arr": "2026-10-27T10:16",
+            "cancelled": false
+          },
+          "CHX": {
+            "booked_dep": null,
+            "actual_dep": null,
+            "booked_arr": "2026-10-27T10:26",
+            "actual_arr": "2026-10-27T10:28",
+            "cancelled": false
+          }
+        }
+      },
+      {
+        "uid": "gb-nr:P85255:2026-10-27",
+        "run_date": "2026-10-27",
+        "window": "am",
+        "cancelled": false,
+        "reason": null,
+        "calls": {
+          "BXY": {
+            "booked_dep": "2026-10-27T09:57",
+            "actual_dep": "2026-10-27T09:58",
+            "booked_arr": "2026-10-27T09:57",
+            "actual_arr": "2026-10-27T09:58",
+            "cancelled": false
+          },
+          "LBG": {
+            "booked_dep": "2026-10-27T10:27",
+            "actual_dep": "2026-10-27T10:27",
+            "booked_arr": "2026-10-27T10:25",
+            "actual_arr": "2026-10-27T10:26",
+            "cancelled": false
+          },
+          "CHX": {
+            "booked_dep": null,
+            "actual_dep": null,
+            "booked_arr": "2026-10-27T10:35",
+            "actual_arr": "2026-10-27T10:34",
+            "cancelled": false
+          }
+        }
       }
     ]
   },
