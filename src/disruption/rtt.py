@@ -207,11 +207,21 @@ def fetch_service(unique_identity: str, board_crs: str, *,
     resp = _get(client, "/gb-nr/service", {"identity": identity, "departureDate": departure_date})
     service = resp.json().get("service") or {}
     calls: dict[str, Call] = {}
+    called_before_board: set[str] = set()
+    board_reached = False
     for loc in service.get("locations") or []:
         codes = (loc.get("location") or {}).get("shortCodes") or []
         crs = next((c for c in codes if c in config.JOURNEY_STATIONS), None)
-        if crs and crs not in calls:
-            calls[crs] = _call(loc.get("temporalData") or {})
+        if crs is None:
+            continue
+        board_reached = board_reached or crs == board_crs
+        if crs in calls and not (board_reached and crs in called_before_board):
+            continue
+        calls[crs] = _call(loc.get("temporalData") or {})
+        if board_reached:
+            called_before_board.discard(crs)
+        else:
+            called_before_board.add(crs)
     board = calls.get(board_crs)
     cancelled = board is None or board.cancelled
     reasons = service.get("reasons")

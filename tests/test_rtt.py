@@ -262,3 +262,19 @@ def test_search_tolerates_missing_departure_date():
     found = search_services("BXY", "LBG", D, config.AM_START, config.AM_END,
                             client=_client({"services": [service]}))
     assert found == []
+
+
+def test_looping_service_uses_calls_after_the_board_call():
+    client = _client(_service_payload(
+        _location("CST", dep=("2026-10-26T07:03:00Z", "2026-10-26T07:05:00Z")),
+        _location("LBG", arr=("2026-10-26T07:06:00Z", "2026-10-26T07:09:00Z"),
+                  dep=("2026-10-26T07:07:00Z", "2026-10-26T07:09:00Z")),
+        _location("BXY", dep=("2026-10-26T08:07:00Z", "2026-10-26T08:11:00Z")),
+        _location("LBG", arr=("2026-10-26T08:38:00Z", None), display="CANCELLED"),
+        _location("CST", arr=("2026-10-26T08:46:00Z", None), display="CANCELLED"),
+    ))
+    cancelled, _r, calls = fetch_service("gb-nr:P88842:2026-10-26", "BXY", client=client)
+    assert calls["CST"].booked_arr == datetime(2026, 10, 26, 8, 46)
+    assert calls["CST"].cancelled and calls["LBG"].cancelled
+    assert calls["BXY"].actual_dep == datetime(2026, 10, 26, 8, 11)
+    assert not cancelled
