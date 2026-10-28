@@ -20,7 +20,7 @@ from pathlib import Path
 import httpx
 
 from . import config, history, ics_writer, journeys, rtt
-from .analyze import build_actual_report, build_day_report, build_merged_report
+from .analyze import apply_journeys, build_actual_report, build_day_report, build_merged_report
 from .models import DayReport
 from .rtt import RttError
 from .scraper import ScrapeError
@@ -134,6 +134,8 @@ def collect_reports(horizon_days: int) -> tuple[list[DayReport], date, list[date
         if rtt_client is not None:
             rtt_client.close()
 
+    for report in store.values():
+        apply_journeys(report)
     history.save(store)
 
     window_start = today - timedelta(days=config.FEED_PAST_DAYS)

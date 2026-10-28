@@ -7,12 +7,12 @@ Two sources feed the same shape (``TrainOption``):
 
 from __future__ import annotations
 
-from datetime import date, time
+from datetime import date, datetime, time
 
 import httpx
 
 from . import config, rtt
-from .models import DayReport, TrainOption
+from .models import Call, DayReport, Journey, TrainOption
 from .scraper import fetch_trains
 
 
@@ -110,3 +110,70 @@ def build_merged_report(
     a_am, a_pm = _actual_windows(d, rtt_client)
     p_am, p_pm = _planner_windows(d, planner_client)
     return summarise(d, merge_trains(a_am, p_am), merge_trains(a_pm, p_pm))
+
+
+def _ends(journey: Journey) -> tuple[Call | None, Call | None]:
+    if journey.window == "am":
+        return journey.calls.get(config.BEXLEY), journey.calls.get(config.LONDON_BRIDGE)
+    return journey.calls.get(config.LONDON_BRIDGE), journey.calls.get(config.BEXLEY)
+
+
+def journey_outcome(journey: Journey) -> tuple[datetime, TrainOption | None] | None:
+    """What happened to one train, judged where it matters: at the destination.
+
+    Returns ``None`` while the outcome is unknown, ``(departure, None)`` for a train
+    that ran fine, and ``(departure, option)`` for a disrupted one.
+    """
+    origin, dest = _ends(journey)
+    if origin is None or origin.booked_dep is None:
+        return None
+    departure = origin.booked_dep
+    if journey.cancelled or origin.cancelled:
+        return departure, TrainOption(departure, True, journey.reason or "Cancelled", cancelled=True)
+    if dest is None:
+        return None
+    if dest.cancelled:
+        reason = "Terminated early" + (f": {journey.reason}" if journey.reason else "")
+        return departure, TrainOption(departure, True, reason, cancelled=True)
+    if journey.reason == "Rail replacement bus":
+        return departure, TrainOption(departure, True, journey.reason)
+    if dest.booked_arr is None or dest.actual_arr is None:
+        return None
+    delay = int((dest.actual_arr - dest.booked_arr).total_seconds() // 60)
+    if delay > config.DELAY_THRESHOLD_MINUTES:
+        return departure, TrainOption(departure, True, f"Arrived {delay} min late", delay_minutes=delay)
+    return departure, None
+
+
+def _severity(option: TrainOption) -> tuple[bool, int]:
+    return option.cancelled, option.delay_minutes or 0
+
+
+def apply_journeys(report: DayReport) -> None:
+    """Replace the departure-based disrupted trains with what journeys show at the destination.
+
+    Trains whose outcome is not known yet keep their departure-based entry.
+    """
+    outcomes = []
+    for journey in report.trains:
+        if journey.window not in ("am", "pm"):
+            continue
+        outcome = journey_outcome(journey)
+        if outcome is not None:
+            outcomes.append((journey.window, *outcome))
+    judged = {departure for _, departure, _ in outcomes}
+
+    def rebuild(window: str, existing: list[TrainOption]) -> list[TrainOption]:
+        worst: dict[datetime, TrainOption] = {}
+        for w, departure, option in outcomes:
+            if w == window and option is not None and (
+                departure not in worst or _severity(option) > _severity(worst[departure])
+            ):
+                worst[departure] = option
+        kept = [t for t in existing if t.departure not in judged]
+        return sorted([*kept, *worst.values()], key=lambda t: t.departure)
+
+    report.am_disrupted_trains = rebuild("am", report.am_disrupted_trains)
+    report.pm_disrupted_trains = rebuild("pm", report.pm_disrupted_trains)
+    report.am_disrupted = len(report.am_disrupted_trains)
+    report.pm_disrupted = len(report.pm_disrupted_trains)
