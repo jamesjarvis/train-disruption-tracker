@@ -117,3 +117,18 @@ def test_legs_view_uses_the_run_towards_the_destination_for_pm_trains(tmp_path):
     })
     legs = _legs(tmp_path, journey)
     assert ("LBG", "BXY", 16, "late") in legs and ("CHX", "BXY", 16, "late") in legs
+
+
+def test_journey_filed_under_a_different_day_than_its_run_date_round_trips(tmp_path):
+    d = date(2026, 10, 24)
+    late = _late_journey(date(2026, 10, 25))
+    store = {d: DayReport(d, trains=[late])}
+    history.save(store, tmp_path / "trains.db")
+    assert history.load(tmp_path / "trains.db")[d].trains == [late]
+
+
+def test_save_keeps_one_copy_of_a_duplicated_journey(tmp_path):
+    d = date(2026, 10, 27)
+    store = {d: DayReport(d, trains=[_late_journey(d), _late_journey(d)])}
+    history.save(store, tmp_path / "trains.db")
+    assert len(history.load(tmp_path / "trains.db")[d].trains) == 1

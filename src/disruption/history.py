@@ -33,7 +33,8 @@ CREATE TABLE IF NOT EXISTS day_disruptions (
 );
 CREATE TABLE IF NOT EXISTS journeys (
     uid TEXT PRIMARY KEY,
-    run_date TEXT NOT NULL REFERENCES days(date),
+    day TEXT NOT NULL REFERENCES days(date),
+    run_date TEXT NOT NULL,
     window TEXT NOT NULL,
     cancelled INTEGER NOT NULL,
     reason TEXT,
@@ -49,7 +50,7 @@ CREATE TABLE IF NOT EXISTS calls (
 );
 CREATE VIEW IF NOT EXISTS legs AS
 WITH am AS (
-    SELECT j.uid, j.run_date, j.window, j.cancelled AS journey_cancelled, j.reason,
+    SELECT j.uid, j.day, j.run_date, j.window, j.cancelled AS journey_cancelled, j.reason,
            o.station AS from_station, d.station AS to_station, o.seq AS from_seq, d.seq AS to_seq
     FROM journeys j
     JOIN calls o ON o.uid = j.uid AND o.station = 'BXY'
@@ -58,7 +59,7 @@ WITH am AS (
         AND d.seq = (SELECT MIN(seq) FROM calls c WHERE c.uid = j.uid AND c.station = d.station AND c.seq > o.seq)
     WHERE j.window = 'am'
 ), pm AS (
-    SELECT j.uid, j.run_date, j.window, j.cancelled AS journey_cancelled, j.reason,
+    SELECT j.uid, j.day, j.run_date, j.window, j.cancelled AS journey_cancelled, j.reason,
            o.station AS from_station, d.station AS to_station, o.seq AS from_seq, d.seq AS to_seq
     FROM journeys j
     JOIN calls d ON d.uid = j.uid AND d.station = 'BXY'
@@ -69,7 +70,7 @@ WITH am AS (
 ), pairs AS (
     SELECT * FROM am UNION ALL SELECT * FROM pm
 ), timed AS (
-    SELECT p.uid, p.run_date, p.window, p.from_station, p.to_station, p.reason,
+    SELECT p.uid, p.day, p.run_date, p.window, p.from_station, p.to_station, p.reason,
            p.journey_cancelled, o.cancelled AS from_cancelled, d.cancelled AS to_cancelled,
            o.booked_dep, o.actual_dep, d.booked_arr, d.actual_arr,
            CASE WHEN d.actual_arr IS NOT NULL AND d.booked_arr IS NOT NULL
@@ -79,7 +80,7 @@ WITH am AS (
     JOIN calls o ON o.uid = p.uid AND o.seq = p.from_seq
     JOIN calls d ON d.uid = p.uid AND d.seq = p.to_seq
 )
-SELECT uid, run_date, window, from_station, to_station, booked_dep, actual_dep, booked_arr, actual_arr,
+SELECT uid, day, run_date, window, from_station, to_station, booked_dep, actual_dep, booked_arr, actual_arr,
        delay_minutes, reason,
        CASE
            WHEN journey_cancelled OR from_cancelled THEN 'cancelled'
@@ -174,12 +175,12 @@ def load(path: Path | None = None) -> dict[date, DayReport]:
         report = store[date.fromisoformat(day)]
         (report.am_disrupted_trains if window == "am" else report.pm_disrupted_trains).append(train)
     journeys = {}
-    for uid, run_date, window, cancelled, reason in conn.execute(
-        "SELECT uid, run_date, window, cancelled, reason FROM journeys ORDER BY run_date, uid"
+    for uid, day, run_date, window, cancelled, reason in conn.execute(
+        "SELECT uid, day, run_date, window, cancelled, reason FROM journeys ORDER BY day, uid"
     ):
         journey = Journey(uid, date.fromisoformat(run_date), window, bool(cancelled), reason, {})
         journeys[uid] = journey
-        store[journey.run_date].trains.append(journey)
+        store[date.fromisoformat(day)].trains.append(journey)
     for uid, station, booked_dep, actual_dep, booked_arr, actual_arr, cancelled in conn.execute(
         "SELECT uid, station, booked_dep, actual_dep, booked_arr, actual_arr, cancelled FROM calls ORDER BY uid, seq"
     ):
@@ -195,6 +196,7 @@ def save(store: dict[date, DayReport], path: Path | None = None) -> None:
     with conn:
         for table in ("calls", "journeys", "day_disruptions", "days"):
             conn.execute(f"DELETE FROM {table}")
+        saved: set[str] = set()
         for d, r in sorted(store.items()):
             conn.execute(
                 "INSERT INTO days VALUES (?, ?, ?, ?, ?)",
@@ -208,9 +210,12 @@ def save(store: dict[date, DayReport], path: Path | None = None) -> None:
                          t.cancelled, t.delay_minutes),
                     )
             for j in r.trains:
+                if j.uid in saved:
+                    continue
+                saved.add(j.uid)
                 conn.execute(
-                    "INSERT INTO journeys VALUES (?, ?, ?, ?, ?, ?)",
-                    (j.uid, j.run_date.isoformat(), j.window, j.cancelled, j.reason, j.final),
+                    "INSERT INTO journeys VALUES (?, ?, ?, ?, ?, ?, ?)",
+                    (j.uid, d.isoformat(), j.run_date.isoformat(), j.window, j.cancelled, j.reason, j.final),
                 )
                 for seq, (station, c) in enumerate(j.calls.items()):
                     conn.execute(
