@@ -9950,7 +9950,7 @@
       {
         "uid": "gb-nr:P86060:2026-10-27",
         "run_date": "2026-10-27",
-        "window": "pm",
+        "window": "late",
         "cancelled": false,
         "reason": null,
         "calls": {
@@ -10227,7 +10227,38 @@
     "pm_disrupted": 0,
     "am_disrupted_trains": [],
     "pm_disrupted_trains": [],
-    "trains": []
+    "trains": [
+      {
+        "uid": "gb-nr:P85224:2026-10-28",
+        "run_date": "2026-10-28",
+        "window": "am",
+        "cancelled": false,
+        "reason": null,
+        "calls": {
+          "BXY": {
+            "booked_dep": "2026-10-28T07:07",
+            "actual_dep": "2026-10-28T07:07",
+            "booked_arr": "2026-10-28T07:07",
+            "actual_arr": "2026-10-28T07:06",
+            "cancelled": false
+          },
+          "LBG": {
+            "booked_dep": "2026-10-28T07:42",
+            "actual_dep": "2026-10-28T07:43",
+            "booked_arr": "2026-10-28T07:40",
+            "actual_arr": "2026-10-28T07:39",
+            "cancelled": false
+          },
+          "CST": {
+            "booked_dep": null,
+            "actual_dep": null,
+            "booked_arr": "2026-10-28T07:46",
+            "actual_arr": "2026-10-28T07:46",
+            "cancelled": false
+          }
+        }
+      }
+    ]
   },
   "2026-10-29": {
     "date": "2026-10-29",
