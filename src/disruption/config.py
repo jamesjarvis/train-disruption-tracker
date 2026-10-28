@@ -91,5 +91,7 @@ ICS_REFRESH = "PT12H"
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 # GitHub Pages serves the docs/ folder; the published feed lives here.
 OUTPUT_ICS = PROJECT_ROOT / "docs" / "disruptions.ics"
-# Rolling history of computed day reports (git-ignored, machine-local).
-HISTORY_PATH = PROJECT_ROOT / "state" / "history.json"
+# Every computed day, journey and call, shared read-only with the status page and MCP server.
+TRAINS_DB_PATH = Path(os.environ.get("TRAINS_DB_PATH") or PROJECT_ROOT / "state" / "trains.db")
+# The JSON store this database replaced; imported once when the database is empty.
+LEGACY_HISTORY_PATH = PROJECT_ROOT / "state" / "history.json"

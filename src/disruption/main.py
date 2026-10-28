@@ -71,7 +71,7 @@ def collect_reports(horizon_days: int) -> tuple[list[DayReport], date, list[date
     surfaces these as a warning event so a total data outage can't masquerade as clean.
     """
     today = date.today()
-    store = history.load()
+    store = history.load() or history.import_json(config.LEGACY_HISTORY_PATH)
     stale_dates: list[date] = []
 
     planner_client = httpx.Client(

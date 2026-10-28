@@ -48,8 +48,8 @@ Two sources feed that:
   no signup. Covers tomorrow to 20 days out, and is the source of planned engineering
   works and replacement buses.
 
-Every day is kept forever in `state/history.json`, which the deployed job also publishes
-next to the feed as `history.json`. The feed itself shows the last 60 days
+Every day is kept forever in the SQLite database at `TRAINS_DB_PATH` (default
+`state/trains.db`), which the status page and MCP server read directly. The feed itself shows the last 60 days
 (`FEED_PAST_DAYS`) alongside the look-ahead. Past days carry no alarm; future days alarm at
 20:00 the evening before.
 
@@ -64,8 +64,10 @@ main.py → history.load()
         → ics_writer.write_calendar(reports)     rebuilt from scratch each run
 ```
 
-History lives in a git-ignored `state/history.json`; the published `.ics` is the durable
-record.
+History lives in a git-ignored `state/trains.db`; the published `.ics` is the durable
+record. The tables are `days`, `day_disruptions`, `journeys` and `calls`, and the `legs` view
+reduces them to one row per origin/destination with a `status` of `ran`, `late`, `cancelled`,
+`terminated_early` or `pending`. An empty database imports the old `state/history.json` once.
 
 Both sources guard against silent breakage. If neither parses any trains for a day, they
 log a warning and keep the last stored value rather than writing a falsely-clean feed.
@@ -124,7 +126,7 @@ or not a Mac is awake. Everything it needs is under `/srv/disruption`.
 | Path | What it is |
 |---|---|
 | `/srv/disruption/repo` | Shallow clone of this repo, branch `main` |
-| `/srv/disruption/repo/state/history.json` | Every recorded day. Not in git |
+| `/srv/disruption/repo/state/trains.db` | Every recorded day. Not in git |
 | `/srv/disruption/ssh/id_ed25519` | GitHub deploy key for this repo only. `pi:pi`, mode 600 |
 | `/srv/disruption/.gitconfig` | Commit identity for the automated pushes |
 | `/etc/train-disruption.env` | Realtime Trains credentials. `root:root`, mode 600 |
@@ -165,7 +167,7 @@ It clones to `/srv/disruption/repo`, builds the venv, installs both units and en
 timer. After that the repo is self-hosting:
 `sudo /srv/disruption/repo/deploy/install-pi.sh`.
 
-Seed the history by copying `state/history.json` onto the Pi; without it the history
+Seed the history by copying `state/trains.db` (or an old `state/history.json`) onto the Pi; without it the history
 window rebuilds from the published `.ics` plus new runs.
 
 ```bash

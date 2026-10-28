@@ -217,6 +217,7 @@ def fetch_service(unique_identity: str, board_crs: str, *,
         board_reached = board_reached or crs == board_crs
         if crs in calls and not (board_reached and crs in called_before_board):
             continue
+        calls.pop(crs, None)
         calls[crs] = _call(loc.get("temporalData") or {})
         if board_reached:
             called_before_board.discard(crs)
